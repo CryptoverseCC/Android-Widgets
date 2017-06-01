@@ -12,6 +12,6 @@ class AdViewTest {
 
     @Test
     fun useAppContext() {
-        SystemClock.sleep(5000)
+        SystemClock.sleep(15000)
     }
 }

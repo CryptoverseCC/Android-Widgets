@@ -5,19 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import io.userfeeds.sdk.core.ranking.RankingItem
 
-class AdsPagerAdapter(private val ranking: List<RankingItem>) : PagerAdapter() {
+internal class AdsPagerAdapter(private val ads: List<Ad>) : PagerAdapter() {
 
-    override fun getCount() = ranking.size
+    override fun getCount() = ads.size
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val inflater = LayoutInflater.from(container.context)
-        val view = inflater.inflate(R.layout.userfeeds_ad_view, container, false)
-        container.addView(view)
+        return inflater.inflate(R.layout.userfeeds_ad_view, container, false).apply {
+            container.addView(this)
+            bind(this, ads[position])
+        }
+    }
+
+    private fun bind(view: View, ad: Ad) {
         val titleView = view.findViewById(R.id.userfeeds_ad_title) as TextView
-        titleView.text = "${ranking[position].value} (${ranking[position].score})"
-        return view
+        titleView.text = ad.title
+        val urlView = view.findViewById(R.id.userfeeds_ad_url) as TextView
+        urlView.text = ad.url
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {

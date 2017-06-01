@@ -1,6 +1,7 @@
 package io.userfeeds.ads.sdk
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.util.Log
@@ -25,15 +26,24 @@ class AdView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         Log.e("AdView", "onAttachedToWindow")
-        just(listOf(RankingItem(1.0, "first"), RankingItem(1.0, "second"), RankingItem(0.5, "third")))
+        just(Ads(
+                items = listOf(
+                        Ad("Yafi - Internet Chess", 0.50, "http://yafi.pl"),
+                        Ad("CoinMarkerCap", 0.30, "http://coinmarketcap.com"),
+                        Ad("CoinBase", 0.20, "https://www.coinbase.com/join")
+                ),
+                widgetUrl = "http://userfeeds.io/",
+                contextImage = "https://beta.userfeeds.io/api/contexts/static/img/ethereum.png",
+                background = Color.BLACK
+        ))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onRanking, this::onError)
+                .subscribe(this::onAds, this::onError)
     }
 
-    private fun onRanking(ranking: List<RankingItem>) {
+    private fun onAds(ads: Ads) {
         val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
-        viewPager.adapter = AdsPagerAdapter(ranking)
+        viewPager.adapter = AdsPagerAdapter(ads.items)
     }
 
     private fun onError(error: Throwable) {
