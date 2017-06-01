@@ -1,0 +1,11 @@
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.userfeeds.ads.sdk.test">
+
+    <application>
+
+        <activity android:name="io.userfeeds.ads.sdk.TestActivity"/>
+
+    </application>
+
+</manifest>
