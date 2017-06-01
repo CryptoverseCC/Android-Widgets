@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:padding="4dp"
+    tools:background="@android:color/black">
 
     <TextView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,6 +15,8 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:lines="1"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:text="Some very long title that does not fit screen width, so it must be longer and longer"/>
 
     <TextView
@@ -21,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:textColor="@android:color/white"
         tools:text="https://userfeeds.io"/>
 
 </LinearLayout>

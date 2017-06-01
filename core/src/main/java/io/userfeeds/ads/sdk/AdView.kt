@@ -33,8 +33,7 @@ class AdView @JvmOverloads constructor(
                         Ad("CoinBase", 0.20, "https://www.coinbase.com/join")
                 ),
                 widgetUrl = "http://userfeeds.io/",
-                contextImage = "https://beta.userfeeds.io/api/contexts/static/img/ethereum.png",
-                background = Color.BLACK
+                contextImage = "https://beta.userfeeds.io/api/contexts/static/img/ethereum.png"
         ))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
