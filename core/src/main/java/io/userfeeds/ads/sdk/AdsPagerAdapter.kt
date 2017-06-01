@@ -27,6 +27,13 @@ internal class AdsPagerAdapter(private val ads: Ads) : PagerAdapter() {
         urlView.text = ad.url
         val contextImage = view.findViewById(R.id.userfeeds_context_image) as ImageView
         Glide.with(view.context).load(ads.contextImage).into(contextImage)
+        view.setOnClickListener {
+            it.context.openBrowser(ad.url)
+        }
+        view.setOnLongClickListener {
+            it.context.openBrowser(ads.widgetUrl)
+            true
+        }
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
