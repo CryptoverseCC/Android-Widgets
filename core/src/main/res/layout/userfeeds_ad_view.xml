@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="4dp"
     tools:background="@android:color/black">
 
     <TextView
@@ -13,8 +12,10 @@
         android:id="@+id/userfeeds_ad_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/userfeeds_context_image"
         android:ellipsize="end"
         android:lines="1"
+        android:padding="4dp"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         tools:text="Some very long title that does not fit screen width, so it must be longer and longer"/>
@@ -23,8 +24,18 @@
         android:id="@+id/userfeeds_ad_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_below="@+id/userfeeds_ad_title"
+        android:layout_toLeftOf="@+id/userfeeds_context_image"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:textColor="@android:color/white"
         tools:text="https://userfeeds.io"/>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/userfeeds_context_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:padding="1dp"/>
+
+</RelativeLayout>

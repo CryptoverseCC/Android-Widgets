@@ -42,9 +42,7 @@ class AdView @JvmOverloads constructor(
 
     private fun onAds(ads: Ads) {
         val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
-        viewPager.adapter = AdsPagerAdapter(ads.items)
-        val contextImage = findViewById(R.id.userfeeds_context_image) as ImageView
-        Glide.with(context).load(ads.contextImage).into(contextImage)
+        viewPager.adapter = AdsPagerAdapter(ads)
     }
 
     private fun onError(error: Throwable) {

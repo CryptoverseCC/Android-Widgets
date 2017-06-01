@@ -4,17 +4,19 @@ import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 
-internal class AdsPagerAdapter(private val ads: List<Ad>) : PagerAdapter() {
+internal class AdsPagerAdapter(private val ads: Ads) : PagerAdapter() {
 
-    override fun getCount() = ads.size
+    override fun getCount() = ads.items.size
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val inflater = LayoutInflater.from(container.context)
         return inflater.inflate(R.layout.userfeeds_ad_view, container, false).apply {
             container.addView(this)
-            bind(this, ads[position])
+            bind(this, ads.items[position])
         }
     }
 
@@ -23,6 +25,8 @@ internal class AdsPagerAdapter(private val ads: List<Ad>) : PagerAdapter() {
         titleView.text = ad.title
         val urlView = view.findViewById(R.id.userfeeds_ad_url) as TextView
         urlView.text = ad.url
+        val contextImage = view.findViewById(R.id.userfeeds_context_image) as ImageView
+        Glide.with(view.context).load(ads.contextImage).into(contextImage)
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
