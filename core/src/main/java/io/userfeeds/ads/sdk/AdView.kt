@@ -1,16 +1,16 @@
 package io.userfeeds.ads.sdk
 
 import android.content.Context
-import android.graphics.Color
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import io.reactivex.Single.just
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import io.userfeeds.sdk.core.ranking.RankingItem
 
 class AdView @JvmOverloads constructor(
         context: Context,
@@ -43,6 +43,8 @@ class AdView @JvmOverloads constructor(
     private fun onAds(ads: Ads) {
         val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
         viewPager.adapter = AdsPagerAdapter(ads.items)
+        val contextImage = findViewById(R.id.userfeeds_context_image) as ImageView
+        Glide.with(context).load(ads.contextImage).into(contextImage)
     }
 
     private fun onError(error: Throwable) {
