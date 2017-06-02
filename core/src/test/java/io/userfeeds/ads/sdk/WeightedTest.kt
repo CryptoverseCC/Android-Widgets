@@ -11,30 +11,26 @@ class WeightedTest {
 
     @Test
     fun `Should return the only item`() {
-        val element = "0.3".w
-        val list = listOf(element)
+        val list = listOf("0.3".w)
         assertSelectedElement(0, list)
     }
 
     @Test
     fun `Should return second item`() {
-        val element = "0.2".w
-        val list = listOf("0.1".w, element)
+        val list = listOf("0.1".w, "0.2".w)
         assertSelectedElement(1, list)
     }
 
     @Test
     fun `Should return third element when equal weights`() {
-        val element = "1.0".w
-        val list = listOf("4.0".w, "2.0".w, element, "5.0".w)
+        val list = listOf("4.0".w, "2.0".w, "1.0".w, "5.0".w)
         assertSelectedElement(2, list)
     }
 
     @Test
     fun `Should return first item when on the edge`() {
-        val element = "1.0".w
         val otherElement = WeightedImpl(BigDecimal(longBitsToDouble(doubleToLongBits(1.0) - 1L)))
-        val list = listOf(element, otherElement)
+        val list = listOf("1.0".w, otherElement)
         assertSelectedElement(0, list)
     }
 
