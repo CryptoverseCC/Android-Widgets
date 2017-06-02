@@ -6,12 +6,12 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
-import io.reactivex.Single.just
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.userfeeds.sdk.core.UserfeedsService
 import java.math.BigDecimal
 import java.security.SecureRandom
-import kotlin.LazyThreadSafetyMode.*
+import kotlin.LazyThreadSafetyMode.NONE
 
 class AdView @JvmOverloads constructor(
         context: Context,
@@ -27,15 +27,22 @@ class AdView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         Log.e("AdView", "onAttachedToWindow")
-        just(Ads(
-                items = listOf(
-                        Ad("Yafi - Internet Chess", BigDecimal("0.50"), "http://yafi.pl"),
-                        Ad("CoinMarkerCap", BigDecimal("0.30"), "http://coinmarketcap.com"),
-                        Ad("CoinBase", BigDecimal("0.20"), "https://www.coinbase.com/join")
-                ),
-                widgetUrl = "http://userfeeds.io/",
-                contextImage = "https://beta.userfeeds.io/api/contexts/static/img/ethereum.png"
-        ))
+        UserfeedsService.get().getContexts()
+                .flatMap {
+                    val shareContext = it.single { it.id == "ethereum" }
+                    UserfeedsService.get().getAlgorithms(shareContext)
+                            .flatMap {
+                                val algorithm = it.single { it.identifier == "newa" }
+                                UserfeedsService.get().getRanking(shareContext, algorithm)
+                            }
+                }
+                .map {
+                    Ads(
+                            items = it.map { Ad(it.value, BigDecimal(it.score), it.value) },
+                            widgetUrl = "http://userfeeds.io/",
+                            contextImage = "https://beta.userfeeds.io/api/contexts/static/img/ethereum.png"
+                    )
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onAds, this::onError)
