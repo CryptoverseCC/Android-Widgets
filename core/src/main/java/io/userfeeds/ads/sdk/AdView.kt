@@ -6,11 +6,12 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
-import com.bumptech.glide.Glide
 import io.reactivex.Single.just
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.math.BigDecimal
+import java.security.SecureRandom
+import kotlin.LazyThreadSafetyMode.*
 
 class AdView @JvmOverloads constructor(
         context: Context,
@@ -28,9 +29,9 @@ class AdView @JvmOverloads constructor(
         Log.e("AdView", "onAttachedToWindow")
         just(Ads(
                 items = listOf(
-                        Ad("Yafi - Internet Chess", 0.50, "http://yafi.pl"),
-                        Ad("CoinMarkerCap", 0.30, "http://coinmarketcap.com"),
-                        Ad("CoinBase", 0.20, "https://www.coinbase.com/join")
+                        Ad("Yafi - Internet Chess", BigDecimal("0.50"), "http://yafi.pl"),
+                        Ad("CoinMarkerCap", BigDecimal("0.30"), "http://coinmarketcap.com"),
+                        Ad("CoinBase", BigDecimal("0.20"), "https://www.coinbase.com/join")
                 ),
                 widgetUrl = "http://userfeeds.io/",
                 contextImage = "https://beta.userfeeds.io/api/contexts/static/img/ethereum.png"
@@ -43,6 +44,7 @@ class AdView @JvmOverloads constructor(
     private fun onAds(ads: Ads) {
         val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
         viewPager.adapter = AdsPagerAdapter(ads)
+        viewPager.currentItem = ads.items.randomIndex(random)
     }
 
     private fun onError(error: Throwable) {
@@ -52,5 +54,10 @@ class AdView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         Log.e("AdView", "onDetachedFromWindow")
+    }
+
+    companion object {
+
+        private val random by lazy(NONE) { SecureRandom() }
     }
 }
