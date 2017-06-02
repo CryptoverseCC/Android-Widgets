@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:background="@android:color/black">
+    android:background="@drawable/userfeeds_ad_background">
 
     <TextView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +15,7 @@
         android:ellipsize="end"
         android:lines="1"
         android:padding="4dp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/userfeeds_ad_text_color"
         android:textStyle="bold"
         tools:text="Some very long title that does not fit screen width, so it must be longer and longer"/>
 
@@ -28,7 +27,7 @@
         android:layout_toLeftOf="@+id/userfeeds_context_image"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/userfeeds_ad_text_color"
         tools:text="https://userfeeds.io"/>
 
     <ImageView
