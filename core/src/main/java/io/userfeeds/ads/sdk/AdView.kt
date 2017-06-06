@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.userfeeds.sdk.core.UserfeedsService
 import java.math.BigDecimal
@@ -20,6 +21,8 @@ class AdView @JvmOverloads constructor(
     :
         FrameLayout(context, attrs, defStyleAttr) {
 
+    private lateinit var disposable: Disposable
+
     init {
         View.inflate(context, R.layout.userfeeds_banner_view, this)
     }
@@ -27,12 +30,12 @@ class AdView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         Log.e("AdView", "onAttachedToWindow")
-        UserfeedsService.get().getContexts()
+        disposable = UserfeedsService.get().getContexts()
                 .flatMap {
                     val shareContext = it.single { it.id == "ethereum" }
                     UserfeedsService.get().getAlgorithms(shareContext)
                             .flatMap {
-                                val algorithm = it.single { it.identifier == "newa" }
+                                val algorithm = it.single { it.identifier == "simple" }
                                 UserfeedsService.get().getRanking(shareContext, algorithm)
                             }
                 }
@@ -61,6 +64,7 @@ class AdView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         Log.e("AdView", "onDetachedFromWindow")
+        disposable.dispose()
     }
 
     companion object {
