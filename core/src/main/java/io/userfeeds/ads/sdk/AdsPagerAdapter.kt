@@ -4,9 +4,7 @@ import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 
 internal class AdsPagerAdapter(private val ads: Ads) : PagerAdapter() {
 
@@ -25,8 +23,6 @@ internal class AdsPagerAdapter(private val ads: Ads) : PagerAdapter() {
         titleView.text = ad.title
         val urlView = view.findViewById(R.id.userfeeds_ad_url) as TextView
         urlView.text = ad.url
-        val contextImage = view.findViewById(R.id.userfeeds_context_image) as ImageView
-        Glide.with(view.context).load(ads.contextImage).into(contextImage)
         view.setOnClickListener {
             it.context.openBrowser(ad.url)
         }

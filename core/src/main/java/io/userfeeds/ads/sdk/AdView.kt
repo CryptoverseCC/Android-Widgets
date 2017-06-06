@@ -30,6 +30,10 @@ class AdView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         Log.e("AdView", "onAttachedToWindow")
+        loadAds()
+    }
+
+    private fun loadAds() {
         disposable = UserfeedsService.get().getContexts()
                 .flatMap {
                     val shareContext = it.single { it.id == "ethereum" }
