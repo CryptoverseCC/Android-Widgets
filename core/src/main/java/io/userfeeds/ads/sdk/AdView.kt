@@ -6,10 +6,11 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import io.userfeeds.sdk.core.UserfeedsService
+import io.userfeeds.sdk.core.ranking.RankingItem
 import java.math.BigDecimal
 import java.security.SecureRandom
 import kotlin.LazyThreadSafetyMode.NONE
@@ -34,15 +35,12 @@ class AdView @JvmOverloads constructor(
     }
 
     private fun loadAds() {
-        disposable = UserfeedsService.get().getContexts()
-                .flatMap {
-                    val shareContext = it.single { it.id == "ethereum" }
-                    UserfeedsService.get().getAlgorithms(shareContext)
-                            .flatMap {
-                                val algorithm = it.single { it.identifier == "simple" }
-                                UserfeedsService.get().getRanking(shareContext, algorithm)
-                            }
-                }
+        disposable = Observable.just(
+                listOf(
+                        RankingItem(3.0, "http://userfeeds.io"),
+                        RankingItem(2.5, "https://www.coinbase.com/"),
+                        RankingItem(1.1, "http://coinmarketcap.com/")
+                ))
                 .map {
                     Ads(
                             items = it.map { Ad(it.value, BigDecimal(it.score), it.value) },
