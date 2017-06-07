@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.userfeeds.sdk.core.UserfeedsSdk
@@ -72,6 +73,15 @@ class AdView : FrameLayout {
 
     private fun onAds(ads: Ads) {
         val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) = Unit
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
+            override fun onPageSelected(position: Int) {
+                val probabilityView = findViewById(R.id.userfeeds_ad_probability) as TextView
+                val value = normalize(ads.items)[position]
+                probabilityView.text = "${value.score.toInt()}%"
+            }
+        })
         viewPager.adapter = AdsPagerAdapter(ads)
         viewPager.currentItem = ads.items.randomIndex(random)
     }
