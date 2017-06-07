@@ -11,7 +11,7 @@ class AdViewTest {
     val rule = ActivityTestRule<TestActivity>(TestActivity::class.java)
 
     @Test
-    fun useAppContext() {
+    fun start() {
         SystemClock.sleep(15000)
     }
 }

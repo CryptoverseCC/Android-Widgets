@@ -15,55 +15,46 @@ import io.userfeeds.sdk.core.context.ShareContext
 import java.security.SecureRandom
 import kotlin.LazyThreadSafetyMode.NONE
 
-class AdView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0)
-    :
-        FrameLayout(context, attrs, defStyleAttr) {
+class AdView : FrameLayout {
 
-    private lateinit var _apiKey: String
-    private lateinit var _context: String
-    private lateinit var _algorithm: String
-    private var _debug: Boolean = false
+    private val apiKey: String
+    private val shareContext: String
+    private val algorithm: String
+    private val debug: Boolean
 
     private lateinit var disposable: Disposable
 
+    constructor(context: Context, apiKey: String, shareContext: String, algorithm: String, debug: Boolean = false) : super(context) {
+        this.apiKey = apiKey
+        this.shareContext = shareContext
+        this.algorithm = algorithm
+        this.debug = debug
+    }
+
+    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        val a = context.obtainStyledAttributes(attrs, R.styleable.AdView, defStyleAttr, 0)
+        this.apiKey = a.getString(R.attr.apiKey)
+        this.shareContext = a.getString(R.attr.context)
+        this.algorithm = a.getString(R.attr.algorithm)
+        this.debug = a.getBoolean(R.attr.debug, false)
+        a.recycle()
+    }
+
     init {
-        if (attrs != null) {
-            _apiKey = attrs.getAttributeValue(R.attr.apiKey)
-            _context = attrs.getAttributeValue(R.attr.context)
-            _algorithm = attrs.getAttributeValue(R.attr.algorithm)
-            _debug = attrs.getAttributeBooleanValue(R.attr.debug, false)
-        }
         View.inflate(context, R.layout.userfeeds_banner_view, this)
-    }
-
-    fun apiKey(apiKey: String) = apply {
-        _apiKey = apiKey
-    }
-
-    fun context(context: String) = apply {
-        _context = context
-    }
-
-    fun algorithm(algorithm: String) = apply {
-        _algorithm = algorithm
-    }
-
-    fun debug() = apply {
-        _debug = true
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        Log.e("AdView", "onAttachedToWindow")
+        if (debug) Log.i("AdView", "onAttachedToWindow")
         loadAds()
     }
 
     private fun loadAds() {
-        UserfeedsSdk.initialize(apiKey = _apiKey, debug = _debug)
-        disposable = UserfeedsService.get().getRanking(ShareContext(_context, "", ""), Algorithm(_algorithm, ""))
+        UserfeedsSdk.initialize(apiKey = apiKey, debug = debug)
+        disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
                 .map { Ads(items = it, widgetUrl = "http://userfeeds.io/") }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onAds, this::onError)
@@ -76,12 +67,12 @@ class AdView @JvmOverloads constructor(
     }
 
     private fun onError(error: Throwable) {
-        Log.e("AdView", "error", error)
+        if (debug) Log.e("AdView", "error", error)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        Log.e("AdView", "onDetachedFromWindow")
+        if (debug) Log.i("AdView", "onDetachedFromWindow")
         disposable.dispose()
     }
 

@@ -14,19 +14,21 @@ class TestActivity : Activity() {
         setContentView(FrameLayout(this).also {
             val layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams.gravity = Gravity.TOP
-            val adView1 = AdView(this)
-                    .apiKey("59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c")
-                    .context("ads")
-                    .algorithm("internal")
-                    .debug()
+            val adView1 = AdView(
+                    context = this,
+                    apiKey = "59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c",
+                    shareContext = "ads",
+                    algorithm = "internal",
+                    debug = true)
             it.addView(adView1, layoutParams)
             val layoutParams2 = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams2.gravity = Gravity.BOTTOM
-            val adView2 = AdView(this)
-                    .apiKey("59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c")
-                    .context("ads")
-                    .algorithm("internal")
-                    .debug()
+            val adView2 = AdView(
+                    context = this,
+                    apiKey = "59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c",
+                    shareContext = "ads",
+                    algorithm = "internal",
+                    debug = true)
             it.addView(adView2, layoutParams2)
         })
     }
