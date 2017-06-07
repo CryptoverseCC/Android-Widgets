@@ -42,7 +42,6 @@ class AdView @JvmOverloads constructor(
     }
 
     private fun onAds(ads: Ads) {
-        Log.e("tag", "adsdssdsds")
         val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
         viewPager.adapter = AdsPagerAdapter(ads)
         viewPager.currentItem = ads.items.randomIndex(random)
@@ -55,7 +54,7 @@ class AdView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         Log.e("AdView", "onDetachedFromWindow")
-        //disposable.dispose()
+        disposable.dispose()
     }
 
     companion object {
