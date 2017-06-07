@@ -12,12 +12,19 @@ class ScoreNormalizerTest {
         input.assertNormalizedTo("100")
     }
 
+    @Test
+    fun `Same elements should be normalized to 50%`() {
+        val input = listOf("1.0", "1")
+        input.assertNormalizedTo("50", "50")
+    }
+
     private fun List<String>.assertNormalizedTo(vararg expected: String) {
         assertEquals(expected.map(::ad), normalize(this.map(::ad)))
     }
 
     private fun normalize(ads: List<Ad>): List<Ad> {
-        return listOf(Ad("", BigDecimal("100"), ""))
+        return List(ads.size) { BigDecimal("100") / BigDecimal(ads.size) }
+                .map { Ad("", it, "") }
     }
 }
 
