@@ -11,17 +11,23 @@ class TestActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        UserfeedsSdk.initialize(
-                apiKey = "59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c",
-                debug = BuildConfig.DEBUG
-        )
         setContentView(FrameLayout(this).also {
             val layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams.gravity = Gravity.TOP
-            it.addView(AdView(this), layoutParams)
+            val adView1 = AdView(this)
+                    .apiKey("59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c")
+                    .context("ads")
+                    .algorithm("internal")
+                    .debug()
+            it.addView(adView1, layoutParams)
             val layoutParams2 = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams2.gravity = Gravity.BOTTOM
-            it.addView(AdView(this), layoutParams2)
+            val adView2 = AdView(this)
+                    .apiKey("59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c")
+                    .context("ads")
+                    .algorithm("internal")
+                    .debug()
+            it.addView(adView2, layoutParams2)
         })
     }
 }
