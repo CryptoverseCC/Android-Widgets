@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/userfeeds_ad_background"
+    android:gravity="center_vertical"
     android:orientation="vertical"
+    android:paddingLeft="4dp"
     android:paddingRight="50dp">
 
     <TextView
