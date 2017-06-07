@@ -57,7 +57,17 @@ class AdView : FrameLayout {
         disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
                 .map { Ads(items = it, widgetUrl = "http://userfeeds.io/") }
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { showLoader() }
+                .doFinally { hideLoader() }
                 .subscribe(this::onAds, this::onError)
+    }
+
+    private fun showLoader() {
+        findViewById(R.id.userfeeds_ads_loader).visibility = View.VISIBLE
+    }
+
+    private fun hideLoader() {
+        findViewById(R.id.userfeeds_ads_loader).visibility = View.GONE
     }
 
     private fun onAds(ads: Ads) {
