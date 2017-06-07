@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import io.userfeeds.sdk.core.ranking.RankingItem
 
 internal class AdsPagerAdapter(private val ads: Ads) : PagerAdapter() {
 
@@ -18,13 +19,13 @@ internal class AdsPagerAdapter(private val ads: Ads) : PagerAdapter() {
         }
     }
 
-    private fun bind(view: View, ad: Ad) {
+    private fun bind(view: View, item: RankingItem) {
         val titleView = view.findViewById(R.id.userfeeds_ad_title) as TextView
-        titleView.text = ad.title
+        titleView.text = item.title
         val urlView = view.findViewById(R.id.userfeeds_ad_url) as TextView
-        urlView.text = ad.url
+        urlView.text = item.target
         view.setOnClickListener {
-            it.context.openBrowser(ad.url)
+            it.context.openBrowser(item.target)
         }
         view.setOnLongClickListener {
             it.context.openBrowser(ads.widgetUrl)

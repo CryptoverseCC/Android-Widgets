@@ -1,5 +1,6 @@
 package io.userfeeds.ads.sdk
 
+import io.userfeeds.sdk.core.ranking.RankingItem
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.lang.Double.doubleToLongBits
@@ -29,12 +30,12 @@ class WeightedTest {
 
     @Test
     fun `Should return first item when on the edge`() {
-        val otherElement = WeightedImpl(BigDecimal(longBitsToDouble(doubleToLongBits(1.0) - 1L)))
+        val otherElement = RankingItem("", longBitsToDouble(doubleToLongBits(1.0) - 1L), "")
         val list = listOf("1.0".w, otherElement)
         assertSelectedElement(0, list)
     }
 
-    private fun assertSelectedElement(index: Int, list: List<Weighted>) {
+    private fun assertSelectedElement(index: Int, list: List<RankingItem>) {
         assertEquals(index, list.randomIndex(randomStub))
     }
 
@@ -43,7 +44,5 @@ class WeightedTest {
         override fun nextDouble() = 0.5
     }
 
-    private class WeightedImpl(override val weight: BigDecimal) : Weighted
-
-    private val String.w get() = WeightedImpl(BigDecimal(this))
+    private val String.w get() = RankingItem("", toDouble(), "")
 }

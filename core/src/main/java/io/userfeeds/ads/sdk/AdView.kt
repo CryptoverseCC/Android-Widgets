@@ -6,12 +6,12 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import io.userfeeds.sdk.core.ranking.RankingItem
-import java.math.BigDecimal
+import io.userfeeds.sdk.core.UserfeedsService
+import io.userfeeds.sdk.core.algorithm.Algorithm
+import io.userfeeds.sdk.core.context.ShareContext
 import java.security.SecureRandom
 import kotlin.LazyThreadSafetyMode.NONE
 
@@ -35,25 +35,14 @@ class AdView @JvmOverloads constructor(
     }
 
     private fun loadAds() {
-        disposable = Observable.just(
-                listOf(
-                        RankingItem(3.0, "http://userfeeds.io"),
-                        RankingItem(2.5, "https://www.coinbase.com/"),
-                        RankingItem(1.1, "http://coinmarketcap.com/")
-                ))
-                .map {
-                    Ads(
-                            items = it.map { Ad(it.value, BigDecimal(it.score), it.value) },
-                            widgetUrl = "http://userfeeds.io/",
-                            contextImage = "https://beta.userfeeds.io/api/contexts/static/img/ethereum.png"
-                    )
-                }
-                .subscribeOn(Schedulers.io())
+        disposable = UserfeedsService.get().getRanking(ShareContext("ads", "", ""), Algorithm("internal", ""))
+                .map { Ads(items = it, widgetUrl = "http://userfeeds.io/") }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onAds, this::onError)
     }
 
     private fun onAds(ads: Ads) {
+        Log.e("tag", "adsdssdsds")
         val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
         viewPager.adapter = AdsPagerAdapter(ads)
         viewPager.currentItem = ads.items.randomIndex(random)
@@ -66,7 +55,7 @@ class AdView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         Log.e("AdView", "onDetachedFromWindow")
-        disposable.dispose()
+        //disposable.dispose()
     }
 
     companion object {

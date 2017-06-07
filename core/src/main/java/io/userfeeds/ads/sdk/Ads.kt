@@ -1,3 +1,5 @@
 package io.userfeeds.ads.sdk
 
-internal class Ads(val items: List<Ad>, val widgetUrl: String, val contextImage: String)
+import io.userfeeds.sdk.core.ranking.RankingItem
+
+internal class Ads(val items: List<RankingItem>, val widgetUrl: String)

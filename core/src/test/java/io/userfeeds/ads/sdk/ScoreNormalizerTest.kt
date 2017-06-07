@@ -38,8 +38,8 @@ class ScoreNormalizerTest {
     }
 
     private fun normalize(ads: List<Ad>): List<Ad> {
-        val sum = ads.fold(ZERO) { acc, ad -> acc + ad.probability }
-        val values = ads.map { it.probability * BigDecimal("100") / sum }
+        val sum = ads.fold(ZERO) { acc, ad -> acc + ad.score }
+        val values = ads.map { it.score * BigDecimal("100") / sum }
         val roundedDownValues = values.map { it.setScale(0, DOWN) }
         val roundedDownSum = roundedDownValues.fold(ZERO) { acc, value -> acc + value }
         val someRoundedUp = if (roundedDownSum == BigDecimal("100")) {
@@ -57,8 +57,8 @@ class ScoreNormalizerTest {
                 }
             }
         }
-        return ads.zip(someRoundedUp) { ad, probability -> ad.copy(probability = probability) }
+        return ads.zip(someRoundedUp) { ad, probability -> ad.copy(score = probability) }
     }
 }
 
-private fun ad(score: String) = Ad("", BigDecimal(score), "")
+private fun ad(score: String) = Ad("", "", BigDecimal(score))
