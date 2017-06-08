@@ -2,6 +2,7 @@ package io.userfeeds.ads.sdk
 
 import android.content.Context
 import android.support.v4.view.ViewPager
+import android.support.v4.view.ViewPager.*
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -23,6 +24,7 @@ class AdView : FrameLayout {
     private val algorithm: String
     private val debug: Boolean
 
+    private lateinit var ads: Ads
     private lateinit var disposable: Disposable
 
     constructor(context: Context, apiKey: String, shareContext: String, algorithm: String, debug: Boolean = false) : super(context) {
@@ -72,9 +74,15 @@ class AdView : FrameLayout {
     }
 
     private fun onAds(ads: Ads) {
+        this.ads = ads
         val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) = Unit
+            override fun onPageScrollStateChanged(state: Int) {
+                when (state) {
+                    SCROLL_STATE_IDLE -> startCounter()
+                    SCROLL_STATE_DRAGGING -> stopCounter()
+                }
+            }
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
             override fun onPageSelected(position: Int) {
                 val probabilityView = findViewById(R.id.userfeeds_ad_probability) as TextView
@@ -84,6 +92,7 @@ class AdView : FrameLayout {
         })
         viewPager.adapter = AdsPagerAdapter(ads)
         viewPager.currentItem = ads.items.randomIndex(random)
+        startCounter()
     }
 
     private fun onError(error: Throwable) {
@@ -93,7 +102,25 @@ class AdView : FrameLayout {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         if (debug) Log.i("AdView", "onDetachedFromWindow")
+        stopCounter()
         disposable.dispose()
+    }
+
+    private fun startCounter() {
+        if (debug) Log.i("AdView", "startCounter ${hashCode()}")
+        removeCallbacks(runnable)
+        postDelayed(runnable, 6000)
+    }
+
+    private fun stopCounter() {
+        if (debug) Log.i("AdView", "stopCounter ${hashCode()}")
+        removeCallbacks(runnable)
+    }
+
+    private val runnable = Runnable {
+        val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
+        viewPager.currentItem = ads.items.randomIndex(random)
+        startCounter()
     }
 
     companion object {
