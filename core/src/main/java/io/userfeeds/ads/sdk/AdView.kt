@@ -120,9 +120,11 @@ class AdView : FrameLayout {
     }
 
     private fun startCounter() {
-        if (debug) Log.i("AdView", "startCounter ${hashCode()}")
-        removeCallbacks(runnable)
-        postDelayed(runnable, flip * 1000L)
+        if (flip > 0) {
+            if (debug) Log.i("AdView", "startCounter ${hashCode()}")
+            removeCallbacks(runnable)
+            postDelayed(runnable, flip * 1000L)
+        }
     }
 
     private fun stopCounter() {
