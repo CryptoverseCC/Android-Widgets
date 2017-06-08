@@ -29,9 +29,9 @@ class AdView : FrameLayout {
     private lateinit var ads: Ads
     private lateinit var disposable: Disposable
 
-    private val loader by lazy(NONE) { findViewById(R.id.userfeeds_ads_loader) }
-    private val viewPager by lazy(NONE) { findViewById(R.id.userfeeds_ads_pager) as ViewPager }
-    private val probabilityView by lazy(NONE) { findViewById(R.id.userfeeds_ad_probability) as TextView }
+    private val loader by find<View>(R.id.userfeeds_ads_loader)
+    private val viewPager by find<ViewPager>(R.id.userfeeds_ads_pager)
+    private val probabilityView by find<TextView>(R.id.userfeeds_ad_probability)
 
     private val displayRandomAdRunnable = Runnable(this::displayRandomAd)
 
