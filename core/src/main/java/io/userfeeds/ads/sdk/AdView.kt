@@ -29,6 +29,12 @@ class AdView : FrameLayout {
     private lateinit var ads: Ads
     private lateinit var disposable: Disposable
 
+    private val loader by lazy(NONE) { findViewById(R.id.userfeeds_ads_loader) }
+    private val viewPager by lazy(NONE) { findViewById(R.id.userfeeds_ads_pager) as ViewPager }
+    private val probabilityView by lazy(NONE) { findViewById(R.id.userfeeds_ad_probability) as TextView }
+
+    private val displayRandomAdRunnable = Runnable(this::displayRandomAd)
+
     constructor(
             context: Context,
             apiKey: String,
@@ -76,22 +82,25 @@ class AdView : FrameLayout {
     }
 
     private fun showLoader() {
-        findViewById(R.id.userfeeds_ads_loader).visibility = View.VISIBLE
+        loader.visibility = View.VISIBLE
     }
 
     private fun hideLoader() {
-        findViewById(R.id.userfeeds_ads_loader).visibility = View.GONE
+        loader.visibility = View.GONE
     }
 
     private fun onAds(ads: Ads) {
         this.ads = ads
-        val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
+        initPager()
+        displayRandomAd()
+    }
+
+    private fun initPager() {
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
 
             override fun onPageSelected(position: Int) {
-                val probabilityView = findViewById(R.id.userfeeds_ad_probability) as TextView
                 val value = normalize(ads.items)[position]
                 probabilityView.text = "${value.score.toInt()}%"
             }
@@ -104,8 +113,6 @@ class AdView : FrameLayout {
             }
         })
         viewPager.adapter = AdsPagerAdapter(ads)
-        viewPager.currentItem = ads.items.randomIndex(random)
-        startCounter()
     }
 
     private fun onError(error: Throwable) {
@@ -122,18 +129,17 @@ class AdView : FrameLayout {
     private fun startCounter() {
         if (flip > 0) {
             if (debug) Log.i("AdView", "startCounter ${hashCode()}")
-            removeCallbacks(runnable)
-            postDelayed(runnable, flip * 1000L)
+            removeCallbacks(displayRandomAdRunnable)
+            postDelayed(displayRandomAdRunnable, flip * 1000L)
         }
     }
 
     private fun stopCounter() {
         if (debug) Log.i("AdView", "stopCounter ${hashCode()}")
-        removeCallbacks(runnable)
+        removeCallbacks(displayRandomAdRunnable)
     }
 
-    private val runnable = Runnable {
-        val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
+    private fun displayRandomAd() {
         viewPager.currentItem = ads.items.randomIndex(random)
         startCounter()
     }
