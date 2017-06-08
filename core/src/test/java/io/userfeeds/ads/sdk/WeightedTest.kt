@@ -30,7 +30,7 @@ class WeightedTest {
 
     @Test
     fun `Should return first item when on the edge`() {
-        val otherElement = RankingItem("", longBitsToDouble(doubleToLongBits(1.0) - 1L), "")
+        val otherElement = RankingItem("", BigDecimal(longBitsToDouble(doubleToLongBits(1.0) - 1L)), null, null)
         val list = listOf("1.0".w, otherElement)
         assertSelectedElement(0, list)
     }
@@ -44,5 +44,5 @@ class WeightedTest {
         override fun nextDouble() = 0.5
     }
 
-    private val String.w get() = RankingItem("", toDouble(), "")
+    private val String.w get() = RankingItem("", BigDecimal(this), null, null)
 }

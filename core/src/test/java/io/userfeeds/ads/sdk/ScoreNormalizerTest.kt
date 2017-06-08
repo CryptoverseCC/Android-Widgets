@@ -3,6 +3,7 @@ package io.userfeeds.ads.sdk
 import io.userfeeds.sdk.core.ranking.RankingItem
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.math.BigDecimal
 
 class ScoreNormalizerTest {
 
@@ -41,4 +42,4 @@ class ScoreNormalizerTest {
     }
 }
 
-private fun ad(score: String) = RankingItem("", score.toDouble(), "")
+private fun ad(score: String) = RankingItem("", BigDecimal(score), null, null)
