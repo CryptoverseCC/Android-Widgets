@@ -5,8 +5,8 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 internal fun normalize(ads: List<RankingItem>): List<RankingItem> {
-    val sum = ads.fold(BigDecimal.ZERO) { acc, ad -> acc + BigDecimal(ad.score) }
-    val values = ads.map { BigDecimal(it.score) * BigDecimal("100") / sum }
+    val sum = ads.fold(BigDecimal.ZERO) { acc, ad -> acc + ad.score }
+    val values = ads.map { it.score * BigDecimal("100") / sum }
     val roundedDownValues = values.map { it.setScale(0, RoundingMode.DOWN) }
     val roundedDownSum = roundedDownValues.fold(BigDecimal.ZERO) { acc, value -> acc + value }
     val someRoundedUp = if (roundedDownSum == BigDecimal("100")) {
@@ -24,5 +24,5 @@ internal fun normalize(ads: List<RankingItem>): List<RankingItem> {
             }
         }
     }
-    return ads.zip(someRoundedUp) { ad, probability -> ad.copy(score = probability.toDouble()) }
+    return ads.zip(someRoundedUp) { ad, probability -> ad.copy(score = probability) }
 }

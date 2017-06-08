@@ -5,10 +5,10 @@ import java.math.BigDecimal
 import java.util.*
 
 internal fun List<RankingItem>.randomIndex(random: Random): Int {
-    val sum = fold(BigDecimal.ZERO) { acc, elem -> acc + BigDecimal(elem.score) }
+    val sum = fold(BigDecimal.ZERO) { acc, elem -> acc + elem.score }
     var value = BigDecimal(random.nextDouble()) * sum
     forEachIndexed { index, elem ->
-        value -= BigDecimal(elem.score)
+        value -= elem.score
         if (value < BigDecimal.ZERO) {
             return index
         }
