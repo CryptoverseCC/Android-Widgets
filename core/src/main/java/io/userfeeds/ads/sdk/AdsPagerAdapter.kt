@@ -25,9 +25,11 @@ internal class AdsPagerAdapter(private val ads: Ads) : PagerAdapter() {
         val urlView = view.findViewById(R.id.userfeeds_ad_url) as TextView
         urlView.text = item.target
         view.setOnClickListener {
+            // AD CLICK EVENT
             it.context.openBrowser(item.target)
         }
         view.setOnLongClickListener {
+            // WIDGET DETAILS EVENT
             it.context.openBrowser(ads.widgetUrl)
             true
         }

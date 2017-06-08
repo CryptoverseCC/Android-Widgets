@@ -9,7 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.Disposable
 import io.userfeeds.sdk.core.UserfeedsSdk
 import io.userfeeds.sdk.core.UserfeedsService
@@ -33,7 +33,7 @@ class AdView : FrameLayout {
     private val viewPager by find<ViewPager>(R.id.userfeeds_ads_pager)
     private val probabilityView by find<TextView>(R.id.userfeeds_ad_probability)
 
-    private val displayRandomAdRunnable = Runnable(this::displayRandomAd)
+    private val displayRandomAdRunnable = Runnable { displayRandomAd(firstTime = false) }
 
     constructor(
             context: Context,
@@ -75,7 +75,10 @@ class AdView : FrameLayout {
         UserfeedsSdk.initialize(apiKey = apiKey, debug = debug)
         disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
                 .map { Ads(items = it, widgetUrl = "http://userfeeds.io/") }
-                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { /* ADS LOAD EVENT */ }
+                .doOnError { /* ADS LOAD FAILED EVENT */ }
+                .doOnDispose { /* ADS LOAD CANCELLED EVENT */ }
+                .observeOn(mainThread())
                 .doOnSubscribe { showLoader() }
                 .doFinally { hideLoader() }
                 .subscribe(this::onAds, this::onError)
@@ -92,7 +95,7 @@ class AdView : FrameLayout {
     private fun onAds(ads: Ads) {
         this.ads = ads
         initPager()
-        displayRandomAd()
+        displayRandomAd(firstTime = true)
     }
 
     private fun initPager() {
@@ -101,6 +104,7 @@ class AdView : FrameLayout {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
 
             override fun onPageSelected(position: Int) {
+                // AD DISPLAYED EVENT
                 val value = normalize(ads.items)[position]
                 probabilityView.text = "${value.score.toInt()}%"
             }
@@ -139,8 +143,17 @@ class AdView : FrameLayout {
         removeCallbacks(displayRandomAdRunnable)
     }
 
-    private fun displayRandomAd() {
-        viewPager.currentItem = ads.items.randomIndex(random)
+    private fun displayRandomAd(firstTime: Boolean) {
+        val index = ads.items.randomIndex(random)
+        if (index == viewPager.currentItem) {
+            if (firstTime) {
+                // AD DISPLAYED EVENT
+            } else {
+                // SAME AD DISPLAYED EVENT
+            }
+        } else {
+            viewPager.currentItem = index
+        }
         startCounter()
     }
 
