@@ -12,11 +12,11 @@ internal fun normalize(ads: List<RankingItem>): List<RankingItem> {
     val someRoundedUp = if (roundedDownSum == BigDecimal("100")) {
         roundedDownValues
     } else {
-        val rests = values.zip(roundedDownValues) { value, roundedDown -> value - roundedDown }
+        val reminders = values.zip(roundedDownValues) { value, roundedDown -> value - roundedDown }
         var numberToRoundUp = (BigDecimal("100") - roundedDownSum).intValueExact()
-        val minToRoundUp = rests.sortedDescending()[numberToRoundUp - 1]
-        roundedDownValues.zip(rests) { value, rest ->
-            value + if (numberToRoundUp > 0 && rest >= minToRoundUp) {
+        val minReminderToRoundUp = reminders.sortedDescending()[numberToRoundUp - 1]
+        roundedDownValues.zip(reminders) { value, reminder ->
+            value + if (numberToRoundUp > 0 && reminder >= minReminderToRoundUp) {
                 numberToRoundUp--
                 BigDecimal.ONE
             } else {
