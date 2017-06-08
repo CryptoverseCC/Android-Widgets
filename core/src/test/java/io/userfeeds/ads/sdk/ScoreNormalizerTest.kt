@@ -30,6 +30,12 @@ class ScoreNormalizerTest {
         input.assertNormalizedTo("34", "33", "33")
     }
 
+    @Test
+    fun `Should normalize to 89% and 11%`() {
+        val input = listOf("89.4", "10.6")
+        input.assertNormalizedTo("89", "11")
+    }
+
     private fun List<String>.assertNormalizedTo(vararg expected: String) {
         assertEquals(expected.map(::ad), normalize(this.map(::ad)))
     }

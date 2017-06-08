@@ -14,7 +14,7 @@ internal fun normalize(ads: List<RankingItem>): List<RankingItem> {
     } else {
         val rests = values.zip(roundedDownValues) { value, roundedDown -> value - roundedDown }
         var numberToRoundUp = (BigDecimal("100") - roundedDownSum).intValueExact()
-        val minToRoundUp = rests.sorted()[numberToRoundUp - 1]
+        val minToRoundUp = rests.sortedDescending()[numberToRoundUp - 1]
         roundedDownValues.zip(rests) { value, rest ->
             value + if (numberToRoundUp > 0 && rest >= minToRoundUp) {
                 numberToRoundUp--
