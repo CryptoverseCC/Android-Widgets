@@ -2,7 +2,8 @@ package io.userfeeds.ads.sdk
 
 import android.content.Context
 import android.support.v4.view.ViewPager
-import android.support.v4.view.ViewPager.*
+import android.support.v4.view.ViewPager.SCROLL_STATE_DRAGGING
+import android.support.v4.view.ViewPager.SCROLL_STATE_IDLE
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -22,15 +23,23 @@ class AdView : FrameLayout {
     private val apiKey: String
     private val shareContext: String
     private val algorithm: String
+    private val flip: Int
     private val debug: Boolean
 
     private lateinit var ads: Ads
     private lateinit var disposable: Disposable
 
-    constructor(context: Context, apiKey: String, shareContext: String, algorithm: String, debug: Boolean = false) : super(context) {
+    constructor(
+            context: Context,
+            apiKey: String,
+            shareContext: String,
+            algorithm: String,
+            flip: Int = defaultFlip,
+            debug: Boolean = defaultDebug) : super(context) {
         this.apiKey = apiKey
         this.shareContext = shareContext
         this.algorithm = algorithm
+        this.flip = flip
         this.debug = debug
     }
 
@@ -41,7 +50,8 @@ class AdView : FrameLayout {
         this.apiKey = a.getString(R.attr.apiKey)
         this.shareContext = a.getString(R.attr.context)
         this.algorithm = a.getString(R.attr.algorithm)
-        this.debug = a.getBoolean(R.attr.debug, false)
+        this.flip = a.getInt(R.attr.flip, defaultFlip)
+        this.debug = a.getBoolean(R.attr.debug, defaultDebug)
         a.recycle()
     }
 
@@ -77,17 +87,20 @@ class AdView : FrameLayout {
         this.ads = ads
         val viewPager = findViewById(R.id.userfeeds_ads_pager) as ViewPager
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
+
+            override fun onPageSelected(position: Int) {
+                val probabilityView = findViewById(R.id.userfeeds_ad_probability) as TextView
+                val value = normalize(ads.items)[position]
+                probabilityView.text = "${value.score.toInt()}%"
+            }
+
             override fun onPageScrollStateChanged(state: Int) {
                 when (state) {
                     SCROLL_STATE_IDLE -> startCounter()
                     SCROLL_STATE_DRAGGING -> stopCounter()
                 }
-            }
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
-            override fun onPageSelected(position: Int) {
-                val probabilityView = findViewById(R.id.userfeeds_ad_probability) as TextView
-                val value = normalize(ads.items)[position]
-                probabilityView.text = "${value.score.toInt()}%"
             }
         })
         viewPager.adapter = AdsPagerAdapter(ads)
@@ -109,7 +122,7 @@ class AdView : FrameLayout {
     private fun startCounter() {
         if (debug) Log.i("AdView", "startCounter ${hashCode()}")
         removeCallbacks(runnable)
-        postDelayed(runnable, 6000)
+        postDelayed(runnable, flip * 1000L)
     }
 
     private fun stopCounter() {
@@ -125,6 +138,8 @@ class AdView : FrameLayout {
 
     companion object {
 
+        private const val defaultFlip = 6
+        private const val defaultDebug = false
         private val random by lazy(NONE) { SecureRandom() }
     }
 }

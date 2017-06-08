@@ -28,6 +28,7 @@ class TestActivity : Activity() {
                     apiKey = "59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c",
                     shareContext = "ads",
                     algorithm = "internal",
+                    flip = 2,
                     debug = true)
             it.addView(adView2, layoutParams2)
         })
