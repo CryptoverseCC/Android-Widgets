@@ -9,7 +9,7 @@ internal fun normalize(ads: List<RankingItem>): List<RankingItem> {
     val probabilities = ads.map { it.score * BigDecimal("100") / scoreSum }
     val roundedDownProbabilities = probabilities.map { it.setScale(0, RoundingMode.DOWN) }
     val roundedDownProbabilitiesSum = roundedDownProbabilities.fold(BigDecimal.ZERO) { acc, value -> acc + value }
-    val roundedUpProbabilities = if (roundedDownProbabilitiesSum == BigDecimal("100")) {
+    val roundedProbabilities = if (roundedDownProbabilitiesSum == BigDecimal("100")) {
         roundedDownProbabilities
     } else {
         val reminders = probabilities.zip(roundedDownProbabilities) { value, roundedDown -> value - roundedDown }
@@ -24,5 +24,5 @@ internal fun normalize(ads: List<RankingItem>): List<RankingItem> {
             }
         }
     }
-    return ads.zip(roundedUpProbabilities) { ad, probability -> ad.copy(score = probability) }
+    return ads.zip(roundedProbabilities) { ad, probability -> ad.copy(score = probability) }
 }
