@@ -53,11 +53,11 @@ class AdView : FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.AdView, defStyleAttr, 0)
-        this.apiKey = a.getString(R.attr.apiKey)
-        this.shareContext = a.getString(R.attr.context)
-        this.algorithm = a.getString(R.attr.algorithm)
-        this.flip = a.getInt(R.attr.flip, defaultFlip)
-        this.debug = a.getBoolean(R.attr.debug, defaultDebug)
+        this.apiKey = a.getString(R.styleable.AdView_apiKey)
+        this.shareContext = a.getString(R.styleable.AdView_context)
+        this.algorithm = a.getString(R.styleable.AdView_algorithm)
+        this.flip = a.getInt(R.styleable.AdView_flip, defaultFlip)
+        this.debug = a.getBoolean(R.styleable.AdView_debug, defaultDebug)
         a.recycle()
     }
 
