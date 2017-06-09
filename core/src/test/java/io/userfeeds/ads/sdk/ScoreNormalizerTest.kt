@@ -37,6 +37,12 @@ class ScoreNormalizerTest {
         input.assertNormalizedTo("89", "11")
     }
 
+    @Test
+    fun `Should add to ones with smaller reminder if they have bigger value`() {
+        val input = listOf("456", "456", "88")
+        input.assertNormalizedTo("46", "46", "8")
+    }
+
     private fun List<String>.assertNormalizedTo(vararg expected: String) {
         assertEquals(expected.map(::ad), normalize(this.map(::ad)))
     }
