@@ -1,1 +1,8 @@
-<manifest package="io.userfeeds.ads.sdk.analytics"/>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.userfeeds.ads.sdk.analytics">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+</manifest>
