@@ -7,15 +7,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import io.userfeeds.sdk.core.ranking.RankingItem
 
-internal class AdsPagerAdapter(private val ads: Ads) : PagerAdapter() {
+internal class AdsPagerAdapter(private val items: List<RankingItem>, private val listener: AdsPagerAdapter.Listener) : PagerAdapter() {
 
-    override fun getCount() = ads.items.size
+    interface Listener {
+
+        fun onAdClick(item: RankingItem)
+
+        fun onAdLongClick(item: RankingItem)
+    }
+
+    override fun getCount() = items.size
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val inflater = LayoutInflater.from(container.context)
         return inflater.inflate(R.layout.userfeeds_ad_view, container, false).apply {
             container.addView(this)
-            bind(this, ads.items[position])
+            bind(this, items[position])
         }
     }
 
@@ -25,12 +32,10 @@ internal class AdsPagerAdapter(private val ads: Ads) : PagerAdapter() {
         val urlView = view.findViewById(R.id.userfeeds_ad_url) as TextView
         urlView.text = item.target
         view.setOnClickListener {
-            // AD CLICK EVENT
-            it.context.openBrowser(item.target)
+            listener.onAdClick(item)
         }
         view.setOnLongClickListener {
-            // WIDGET DETAILS EVENT
-            it.context.openBrowser(ads.widgetUrl)
+            listener.onAdLongClick(item)
             true
         }
     }

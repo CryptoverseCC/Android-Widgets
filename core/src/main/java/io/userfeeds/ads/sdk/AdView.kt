@@ -9,13 +9,15 @@ import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import io.userfeeds.sdk.core.UserfeedsSdk
-import io.userfeeds.sdk.core.UserfeedsService
-import io.userfeeds.sdk.core.algorithm.Algorithm
-import io.userfeeds.sdk.core.context.ShareContext
+import io.userfeeds.sdk.core.ranking.RankingItem
+import java.math.BigDecimal
 import java.security.SecureRandom
+import java.util.concurrent.TimeUnit
 import kotlin.LazyThreadSafetyMode.NONE
 
 class AdView : FrameLayout {
@@ -26,14 +28,16 @@ class AdView : FrameLayout {
     private val flip: Int
     private val debug: Boolean
 
-    private lateinit var ads: Ads
+    private val listeners = mutableListOf<AdViewEventListener>()
+
+    private lateinit var ads: List<RankingItem>
     private lateinit var disposable: Disposable
 
     private val loader by find<View>(R.id.userfeeds_ads_loader)
     private val viewPager by find<ViewPager>(R.id.userfeeds_ads_pager)
     private val probabilityView by find<TextView>(R.id.userfeeds_ad_probability)
 
-    private val displayRandomAdRunnable = Runnable { displayRandomAd(firstTime = false) }
+    private val displayRandomAdRunnable = Runnable(this::displayRandomAd)
 
     constructor(
             context: Context,
@@ -61,24 +65,40 @@ class AdView : FrameLayout {
         a.recycle()
     }
 
+    fun addListener(listener: AdViewEventListener) {
+        listeners += listener
+    }
+
+    fun removeListener(listener: AdViewEventListener) {
+        listeners -= listener
+    }
+
     init {
         View.inflate(context, R.layout.userfeeds_banner_view, this)
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (debug) Log.i("AdView", "onAttachedToWindow")
+        logInfo("onAttachedToWindow")
         loadAds()
     }
 
     private fun loadAds() {
         UserfeedsSdk.initialize(apiKey = apiKey, debug = debug)
-        disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
-                .map { Ads(items = it, widgetUrl = "http://userfeeds.io/") }
-                .doOnSubscribe { /* ADS LOAD EVENT */ }
-                .doOnError { /* ADS LOAD FAILED EVENT */ }
-                .doOnDispose { /* ADS LOAD CANCELLED EVENT */ }
+        disposable = Single.just(listOf(
+                RankingItem("http://target.one", BigDecimal(123), "Title One", null),
+                RankingItem("http://target.two", BigDecimal(123), "Title Two", null),
+                RankingItem("http://target.one", BigDecimal(123), "Title One", null),
+                RankingItem("http://target.one", BigDecimal(123), "Title One", null),
+                RankingItem("http://target.two", BigDecimal(123), "Title Two", null),
+                RankingItem("http://target.three", BigDecimal(124), "Title Three", null)
+        )).delay(2000, TimeUnit.MILLISECONDS, Schedulers.io())
+                //disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
                 .observeOn(mainThread())
+                .doOnSubscribe { listeners.forEach { it.adsLoadStart() } }
+                .doOnSuccess { listeners.forEach { it.adsLoadSuccess() } }
+                .doOnError { listeners.forEach { it.adsLoadError() } }
+                .doOnDispose { listeners.forEach { it.adsLoadCancel() } }
                 .doOnSubscribe { showLoader() }
                 .doFinally { hideLoader() }
                 .subscribe(this::onAds, this::onError)
@@ -92,10 +112,10 @@ class AdView : FrameLayout {
         loader.visibility = View.GONE
     }
 
-    private fun onAds(ads: Ads) {
+    private fun onAds(ads: List<RankingItem>) {
         this.ads = ads
         initPager()
-        displayRandomAd(firstTime = true)
+        displayRandomAd()
     }
 
     private fun initPager() {
@@ -104,19 +124,37 @@ class AdView : FrameLayout {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
 
             override fun onPageSelected(position: Int) {
-                // AD DISPLAYED EVENT
-                val value = normalize(ads.items)[position]
+                listeners.forEach { it.adDisplay() }
+                val value = normalize(ads)[position]
                 probabilityView.text = "${value.score.toInt()}%"
             }
 
             override fun onPageScrollStateChanged(state: Int) {
+                logInfo("onPageScrollStateChanged " + state)
                 when (state) {
                     SCROLL_STATE_IDLE -> startCounter()
-                    SCROLL_STATE_DRAGGING -> stopCounter()
+                    SCROLL_STATE_DRAGGING -> {
+                        listeners.forEach { it.adSwipe() }
+                        stopCounter()
+                    }
                 }
             }
         })
-        viewPager.adapter = AdsPagerAdapter(ads)
+        viewPager.adapter = AdsPagerAdapter(ads, object : AdsPagerAdapter.Listener {
+
+            override fun onAdClick(item: RankingItem) {
+                listeners.forEach { it.adClick() }
+                context.openBrowser(item.target)
+                listeners.forEach { it.adTarget() }
+            }
+
+            override fun onAdLongClick(item: RankingItem) {
+                listeners.forEach { it.adLongClick() }
+                logInfo("onAdLongClick")
+                context.openBrowser("http://userfeeds.io/")
+                listeners.forEach { it.widgetDetails() }
+            }
+        })
     }
 
     private fun onError(error: Throwable) {
@@ -125,36 +163,36 @@ class AdView : FrameLayout {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (debug) Log.i("AdView", "onDetachedFromWindow")
+        logInfo("onDetachedFromWindow")
         stopCounter()
         disposable.dispose()
     }
 
     private fun startCounter() {
         if (flip > 0) {
-            if (debug) Log.i("AdView", "startCounter ${hashCode()}")
+            logInfo("startCounter")
             removeCallbacks(displayRandomAdRunnable)
             postDelayed(displayRandomAdRunnable, flip * 1000L)
         }
     }
 
     private fun stopCounter() {
-        if (debug) Log.i("AdView", "stopCounter ${hashCode()}")
+        logInfo("stopCounter")
         removeCallbacks(displayRandomAdRunnable)
     }
 
-    private fun displayRandomAd(firstTime: Boolean) {
-        val index = ads.items.randomIndex(random)
+    private fun displayRandomAd() {
+        val index = ads.randomIndex(random)
         if (index == viewPager.currentItem) {
-            if (firstTime) {
-                // AD DISPLAYED EVENT
-            } else {
-                // SAME AD DISPLAYED EVENT
-            }
+            listeners.forEach { it.adDisplay() }
         } else {
             viewPager.currentItem = index
         }
         startCounter()
+    }
+
+    private fun logInfo(message: String) {
+        if (debug) Log.i("AdView", message)
     }
 
     companion object {
