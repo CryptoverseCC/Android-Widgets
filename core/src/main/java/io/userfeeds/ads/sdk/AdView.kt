@@ -185,10 +185,10 @@ class AdView : FrameLayout {
         val index = ads.randomIndex(random)
         if (index == viewPager.currentItem) {
             listeners.forEach { it.adDisplay() }
+            startCounter()
         } else {
             viewPager.currentItem = index
         }
-        startCounter()
     }
 
     private fun logInfo(message: String) {

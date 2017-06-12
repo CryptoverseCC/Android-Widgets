@@ -1,1 +1,1 @@
-include ':core', ':analytics'
+include ':core', ':analytics-firebase', ':analytics-google'
