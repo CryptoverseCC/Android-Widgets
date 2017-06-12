@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.Disposable
-import io.userfeeds.sdk.core.UserfeedsSdk
 import io.userfeeds.sdk.core.UserfeedsService
 import io.userfeeds.sdk.core.algorithm.Algorithm
 import io.userfeeds.sdk.core.context.ShareContext
@@ -21,7 +20,6 @@ import kotlin.LazyThreadSafetyMode.NONE
 
 class AdView : FrameLayout {
 
-    private val apiKey: String
     private val shareContext: String
     private val algorithm: String
     private val flip: Int
@@ -42,12 +40,10 @@ class AdView : FrameLayout {
 
     constructor(
             context: Context,
-            apiKey: String,
             shareContext: String,
             algorithm: String,
             flip: Int = defaultFlip,
             debug: Boolean = defaultDebug) : super(context) {
-        this.apiKey = apiKey
         this.shareContext = shareContext
         this.algorithm = algorithm
         this.flip = flip
@@ -58,7 +54,6 @@ class AdView : FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.AdView, defStyleAttr, 0)
-        this.apiKey = a.getString(R.styleable.AdView_apiKey)
         this.shareContext = a.getString(R.styleable.AdView_context)
         this.algorithm = a.getString(R.styleable.AdView_algorithm)
         this.flip = a.getInt(R.styleable.AdView_flip, defaultFlip)
@@ -89,7 +84,6 @@ class AdView : FrameLayout {
     }
 
     private fun loadAds() {
-        UserfeedsSdk.initialize(apiKey = apiKey, debug = debug)
         disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
                 .observeOn(mainThread())
                 .doOnSubscribe { notifyListeners { adsLoadStart() } }
