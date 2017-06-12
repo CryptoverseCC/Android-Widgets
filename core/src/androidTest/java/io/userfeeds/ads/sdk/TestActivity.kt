@@ -31,16 +31,16 @@ class TestActivity : Activity() {
                     flip = 3,
                     debug = true)
             adView2.addListener(object : AdViewEventListener {
-                override fun adClick() = logE("adClick")
-                override fun adLongClick() = logE("adLongClick")
-                override fun adSwipe() = logE("adSwipe")
+                override fun adClick(index: Int) = logE("adClick $index")
+                override fun adLongClick(index: Int) = logE("adLongClick $index")
+                override fun adSwipe(index: Int) = logE("adSwipe $index")
 
                 override fun adsLoadStart() = logE("adsLoadStart")
                 override fun adsLoadSuccess() = logE("adsLoadSuccess")
                 override fun adsLoadError() = logE("adsLoadError")
                 override fun adsLoadCancel() = logE("adsLoadCancel")
-                override fun adDisplay() = logE("adDisplay")
-                override fun adTarget() = logE("adTarget")
+                override fun adDisplay(index: Int) = logE("adDisplay $index")
+                override fun adTarget(index: Int) = logE("adTarget $index")
                 override fun widgetDetails() = logE("widgetDetails")
             })
             it.addView(adView2, layoutParams2)

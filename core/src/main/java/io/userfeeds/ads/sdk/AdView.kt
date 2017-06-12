@@ -133,7 +133,7 @@ class AdView : FrameLayout {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
 
             override fun onPageSelected(position: Int) {
-                notifyListeners { adDisplay() }
+                notifyListeners { adDisplay(position) }
                 val value = normalize(ads)[position]
                 probabilityView.text = "${value.score.toInt()}%"
             }
@@ -143,7 +143,7 @@ class AdView : FrameLayout {
                 when (state) {
                     SCROLL_STATE_IDLE -> startCounter()
                     SCROLL_STATE_DRAGGING -> {
-                        notifyListeners { adSwipe() }
+                        notifyListeners { adSwipe(viewPager.currentItem) }
                         stopCounter()
                     }
                 }
@@ -152,13 +152,13 @@ class AdView : FrameLayout {
         viewPager.adapter = AdsPagerAdapter(ads, object : AdsPagerAdapter.Listener {
 
             override fun onAdClick(item: RankingItem) {
-                notifyListeners { adClick() }
+                notifyListeners { adClick(ads.indexOf(item)) }
                 context.openBrowser(item.target)
-                notifyListeners { adTarget() }
+                notifyListeners { adTarget(ads.indexOf(item)) }
             }
 
             override fun onAdLongClick(item: RankingItem) {
-                notifyListeners { adLongClick() }
+                notifyListeners { adLongClick(ads.indexOf(item)) }
                 logInfo("onAdLongClick")
                 context.openBrowser("http://userfeeds.io/")
                 notifyListeners { widgetDetails() }
@@ -195,7 +195,7 @@ class AdView : FrameLayout {
     private fun displayRandomAd() {
         val index = ads.randomIndex(random)
         if (index == viewPager.currentItem) {
-            notifyListeners { adDisplay() }
+            notifyListeners { adDisplay(index) }
             startCounter()
         } else {
             viewPager.currentItem = index

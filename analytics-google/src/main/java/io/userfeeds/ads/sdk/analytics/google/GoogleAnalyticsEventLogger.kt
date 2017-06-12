@@ -1,7 +1,6 @@
-package io.userfeeds.ads.sdk.analytics
+package io.userfeeds.ads.sdk.analytics.google
 
 import android.content.Context
-import android.os.Bundle
 import android.support.annotation.XmlRes
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
@@ -17,13 +16,13 @@ class GoogleAnalyticsEventLogger(context: Context, @XmlRes trackerXml: Int) : Ad
     override fun adsLoadSuccess() = sendEvent("userfeeds_ads_load_success")
     override fun adsLoadError() = sendEvent("userfeeds_ads_load_error")
     override fun adsLoadCancel() = sendEvent("userfeeds_ads_load_cancel")
-    override fun adDisplay() = sendEvent("userfeeds_ad_display")
-    override fun adTarget() = sendEvent("userfeeds_ad_target")
+    override fun adDisplay(index: Int) = sendEvent("userfeeds_ad_display")
+    override fun adTarget(index: Int) = sendEvent("userfeeds_ad_target")
     override fun widgetDetails() = sendEvent("userfeeds_widget_details")
 
-    override fun adClick() = sendEvent("userfeeds_ad_click")
-    override fun adLongClick() = sendEvent("userfeeds_ad_long_click")
-    override fun adSwipe() = sendEvent("userfeeds_ad_swipe")
+    override fun adClick(index: Int) = sendEvent("userfeeds_ad_click")
+    override fun adLongClick(index: Int) = sendEvent("userfeeds_ad_long_click")
+    override fun adSwipe(index: Int) = sendEvent("userfeeds_ad_swipe")
 
     private fun sendEvent(action: String) {
         tracker.send(HitBuilders.EventBuilder()
