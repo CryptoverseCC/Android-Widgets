@@ -9,15 +9,14 @@ import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.userfeeds.sdk.core.UserfeedsSdk
+import io.userfeeds.sdk.core.UserfeedsService
+import io.userfeeds.sdk.core.algorithm.Algorithm
+import io.userfeeds.sdk.core.context.ShareContext
 import io.userfeeds.sdk.core.ranking.RankingItem
-import java.math.BigDecimal
 import java.security.SecureRandom
-import java.util.concurrent.TimeUnit
 import kotlin.LazyThreadSafetyMode.NONE
 
 class AdView : FrameLayout {
@@ -87,15 +86,7 @@ class AdView : FrameLayout {
 
     private fun loadAds() {
         UserfeedsSdk.initialize(apiKey = apiKey, debug = debug)
-        disposable = Single.just(listOf<RankingItem>(
-                RankingItem("http://target.one", BigDecimal(123), "Title One", null),
-                RankingItem("http://target.two", BigDecimal(123), "Title Two", null),
-                RankingItem("http://target.one", BigDecimal(123), "Title One", null),
-                RankingItem("http://target.one", BigDecimal(123), "Title One", null),
-                RankingItem("http://target.two", BigDecimal(123), "Title Two", null),
-                RankingItem("http://target.three", BigDecimal(124), "Title Three", null)
-        )).delay(2000, TimeUnit.MILLISECONDS, Schedulers.io())
-                //disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
+        disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
                 .observeOn(mainThread())
                 .doOnSubscribe { listeners.forEach { it.adsLoadStart() } }
                 .doOnSuccess { listeners.forEach { it.adsLoadSuccess() } }
