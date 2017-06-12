@@ -123,6 +123,7 @@ class AdView : FrameLayout {
             detailsPanel.visibility = View.VISIBLE
             initPager()
             displayRandomAd()
+            startCounter()
         }
     }
 
