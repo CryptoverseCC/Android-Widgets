@@ -36,7 +36,7 @@ class AdView : FrameLayout {
     private val viewPager by find<ViewPager>(R.id.userfeeds_ads_pager)
     private val detailsPanel by find<View>(R.id.userfeeds_ads_details_panel)
     private val probabilityView by find<TextView>(R.id.userfeeds_ad_probability)
-    private val emptyView by find<View>(R.id.userfeeds_ads_empty_view)
+    private val emptyView by find<TextView>(R.id.userfeeds_ads_empty_view)
 
     private val displayRandomAdRunnable = Runnable(this::displayRandomAd)
 
@@ -74,6 +74,10 @@ class AdView : FrameLayout {
         listeners -= listener
     }
 
+    private fun notifyListeners(func: AdViewEventListener.() -> Unit) {
+        listeners.forEach { it.func() }
+    }
+
     init {
         View.inflate(context, R.layout.userfeeds_banner_view, this)
     }
@@ -88,10 +92,10 @@ class AdView : FrameLayout {
         UserfeedsSdk.initialize(apiKey = apiKey, debug = debug)
         disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
                 .observeOn(mainThread())
-                .doOnSubscribe { listeners.forEach { it.adsLoadStart() } }
-                .doOnSuccess { listeners.forEach { it.adsLoadSuccess() } }
-                .doOnError { listeners.forEach { it.adsLoadError() } }
-                .doOnDispose { listeners.forEach { it.adsLoadCancel() } }
+                .doOnSubscribe { notifyListeners { adsLoadStart() } }
+                .doOnSuccess { notifyListeners { adsLoadSuccess() } }
+                .doOnError { notifyListeners { adsLoadError() } }
+                .doOnDispose { notifyListeners { adsLoadCancel() } }
                 .doOnSubscribe { showLoader() }
                 .doFinally { hideLoader() }
                 .subscribe(this::onAds, this::onError)
@@ -108,9 +112,10 @@ class AdView : FrameLayout {
     private fun onAds(ads: List<RankingItem>) {
         if (ads.isEmpty()) {
             emptyView.visibility = View.VISIBLE
+            emptyView.setText(R.string.userfeeds_ads_empty)
             emptyView.setOnLongClickListener {
                 context.openBrowser("http://userfeeds.io/")
-                listeners.forEach { it.widgetDetails() }
+                notifyListeners { widgetDetails() }
                 true
             }
         } else {
@@ -127,7 +132,7 @@ class AdView : FrameLayout {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
 
             override fun onPageSelected(position: Int) {
-                listeners.forEach { it.adDisplay() }
+                notifyListeners { adDisplay() }
                 val value = normalize(ads)[position]
                 probabilityView.text = "${value.score.toInt()}%"
             }
@@ -137,7 +142,7 @@ class AdView : FrameLayout {
                 when (state) {
                     SCROLL_STATE_IDLE -> startCounter()
                     SCROLL_STATE_DRAGGING -> {
-                        listeners.forEach { it.adSwipe() }
+                        notifyListeners { adSwipe() }
                         stopCounter()
                     }
                 }
@@ -146,22 +151,24 @@ class AdView : FrameLayout {
         viewPager.adapter = AdsPagerAdapter(ads, object : AdsPagerAdapter.Listener {
 
             override fun onAdClick(item: RankingItem) {
-                listeners.forEach { it.adClick() }
+                notifyListeners { adClick() }
                 context.openBrowser(item.target)
-                listeners.forEach { it.adTarget() }
+                notifyListeners { adTarget() }
             }
 
             override fun onAdLongClick(item: RankingItem) {
-                listeners.forEach { it.adLongClick() }
+                notifyListeners { adLongClick() }
                 logInfo("onAdLongClick")
                 context.openBrowser("http://userfeeds.io/")
-                listeners.forEach { it.widgetDetails() }
+                notifyListeners { widgetDetails() }
             }
         })
     }
 
     private fun onError(error: Throwable) {
         if (debug) Log.e("AdView", "error", error)
+        emptyView.visibility = View.VISIBLE
+        emptyView.setText(R.string.userfeeds_ads_load_error)
     }
 
     override fun onDetachedFromWindow() {
@@ -187,7 +194,7 @@ class AdView : FrameLayout {
     private fun displayRandomAd() {
         val index = ads.randomIndex(random)
         if (index == viewPager.currentItem) {
-            listeners.forEach { it.adDisplay() }
+            notifyListeners { adDisplay() }
             startCounter()
         } else {
             viewPager.currentItem = index
