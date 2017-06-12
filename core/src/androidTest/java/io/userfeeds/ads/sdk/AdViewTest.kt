@@ -12,6 +12,6 @@ class AdViewTest {
 
     @Test
     fun start() {
-        SystemClock.sleep(30000)
+        SystemClock.sleep(300000)
     }
 }
