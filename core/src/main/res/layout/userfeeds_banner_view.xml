@@ -17,11 +17,23 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
+    <TextView
+        android:id="@+id/userfeeds_ads_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/userfeeds_ad_background"
+        android:gravity="center"
+        android:text="Long press to see widget details"
+        android:textColor="@color/userfeeds_ad_text_color"
+        android:visibility="gone"/>
+
     <LinearLayout
+        android:id="@+id/userfeeds_ads_details_panel"
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:layout_gravity="right"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"

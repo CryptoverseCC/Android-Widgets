@@ -35,7 +35,9 @@ class AdView : FrameLayout {
 
     private val loader by find<View>(R.id.userfeeds_ads_loader)
     private val viewPager by find<ViewPager>(R.id.userfeeds_ads_pager)
+    private val detailsPanel by find<View>(R.id.userfeeds_ads_details_panel)
     private val probabilityView by find<TextView>(R.id.userfeeds_ad_probability)
+    private val emptyView by find<View>(R.id.userfeeds_ads_empty_view)
 
     private val displayRandomAdRunnable = Runnable(this::displayRandomAd)
 
@@ -85,7 +87,7 @@ class AdView : FrameLayout {
 
     private fun loadAds() {
         UserfeedsSdk.initialize(apiKey = apiKey, debug = debug)
-        disposable = Single.just(listOf(
+        disposable = Single.just(listOf<RankingItem>(
                 RankingItem("http://target.one", BigDecimal(123), "Title One", null),
                 RankingItem("http://target.two", BigDecimal(123), "Title Two", null),
                 RankingItem("http://target.one", BigDecimal(123), "Title One", null),
@@ -113,9 +115,19 @@ class AdView : FrameLayout {
     }
 
     private fun onAds(ads: List<RankingItem>) {
-        this.ads = ads
-        initPager()
-        displayRandomAd()
+        if (ads.isEmpty()) {
+            emptyView.visibility = View.VISIBLE
+            emptyView.setOnLongClickListener {
+                context.openBrowser("http://userfeeds.io/")
+                listeners.forEach { it.widgetDetails() }
+                true
+            }
+        } else {
+            this.ads = ads
+            detailsPanel.visibility = View.VISIBLE
+            initPager()
+            displayRandomAd()
+        }
     }
 
     private fun initPager() {

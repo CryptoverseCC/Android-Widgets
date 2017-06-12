@@ -30,7 +30,7 @@ class TestActivity : Activity() {
                     algorithm = "internal",
                     flip = 3,
                     debug = true)
-            adView2.addListener(object : AdViewEventListener() {
+            adView2.addListener(object : AdViewEventListener {
                 override fun adClick() = logE("adClick")
                 override fun adLongClick() = logE("adLongClick")
                 override fun adSwipe() = logE("adSwipe")
