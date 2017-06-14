@@ -4,10 +4,6 @@ SDK with view to display ads.
 
 ## Setup
 
-### Request API key
-
-Go to https://api.userfeeds.io/portal/apis/, register and receive key.
-
 ### Add dependency
 
 ```groovy
@@ -20,19 +16,6 @@ dependencies {
 You may find the latest version number by going to [maven central search](http://search.maven.org/#search|ga|1|g%3A%22io.userfeeds.ads.sdk%22).
 
 You will need to also depend on support-v4 library, but you don't have to specify it explicitly if you already depend on another support library that depends on it (e.g. appcompat-v7, desing).
-
-### Initialize SDK
-
-You will usually init the SDK in a class extending Application.
-
-```
-class MyAwesomeApp : Application() {
-
-    override fun onCreate() {
-        UserfeedsSdk.initialize(apiKey = "<your API key>")
-    }
-}
-```
 
 ## Use
 
