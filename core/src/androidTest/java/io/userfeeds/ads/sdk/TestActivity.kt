@@ -4,7 +4,8 @@ import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import io.userfeeds.sdk.core.UserfeedsSdk
 
@@ -16,22 +17,23 @@ class TestActivity : Activity() {
                 apiKey = "59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c",
                 debug = true)
         setContentView(FrameLayout(this).also {
-            //            val layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-//            layoutParams.gravity = Gravity.TOP
-//            val adView1 = AdView(
-//                    context = this,
-//                    apiKey = "59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c",
-//                    shareContext = "ads",
-//                    algorithm = "internal",
-//                    debug = true)
-//            it.addView(adView1, layoutParams)
-            val layoutParams2 = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            layoutParams2.gravity = Gravity.BOTTOM
+            val layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
+                gravity = Gravity.TOP
+            }
+            val adView1 = AdView(
+                    context = this,
+                    shareContext = "ads",
+                    algorithm = "internal",
+                    flip = 0,
+                    debug = true)
+            it.addView(adView1, layoutParams)
+            val layoutParams2 = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
+                gravity = Gravity.BOTTOM
+            }
             val adView2 = AdView(
                     context = this,
                     shareContext = "ads",
                     algorithm = "internal",
-                    flip = 3,
                     debug = true)
             adView2.addListener(object : AdViewEventListener {
                 override fun adClick(index: Int) = logE("adClick $index")
