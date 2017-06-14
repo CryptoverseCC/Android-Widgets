@@ -5,6 +5,7 @@
     <application>
 
         <activity android:name="io.userfeeds.ads.sdk.TestActivity"/>
+        <activity android:name="io.userfeeds.ads.sdk.DynamicTestActivity"/>
 
     </application>
 

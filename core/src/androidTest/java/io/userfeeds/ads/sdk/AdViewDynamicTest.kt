@@ -5,13 +5,13 @@ import android.support.test.rule.ActivityTestRule
 import org.junit.Rule
 import org.junit.Test
 
-class AdViewTest {
+class AdViewDynamicTest {
 
     @Rule @JvmField
-    val rule = ActivityTestRule<TestActivity>(TestActivity::class.java)
+    val rule = ActivityTestRule<DynamicTestActivity>(DynamicTestActivity::class.java)
 
     @Test
     fun start() {
-        SystemClock.sleep(1000)
+        SystemClock.sleep(300000)
     }
 }
