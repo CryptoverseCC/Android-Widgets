@@ -28,6 +28,7 @@ class AdView : FrameLayout {
     private val listeners = mutableListOf<AdViewEventListener>()
 
     private lateinit var ads: List<RankingItem>
+    private var loaded = false
     private lateinit var disposable: Disposable
 
     private val loader by find<View>(R.id.userfeeds_ads_loader)
@@ -80,7 +81,12 @@ class AdView : FrameLayout {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         logInfo("onAttachedToWindow")
-        loadAds()
+        if (!loaded) {
+            loadAds()
+        } else {
+            displayRandomAd()
+            startCounter()
+        }
     }
 
     private fun loadAds() {
@@ -115,6 +121,7 @@ class AdView : FrameLayout {
             }
         } else {
             this.ads = ads
+            this.loaded = true
             detailsPanel.visibility = View.VISIBLE
             initPager()
             displayRandomAd()
@@ -123,7 +130,6 @@ class AdView : FrameLayout {
     }
 
     private fun initPager() {
-        viewPager.clearOnPageChangeListeners()
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit

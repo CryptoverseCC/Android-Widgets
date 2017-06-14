@@ -43,7 +43,7 @@ class DynamicTestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     context = parent.context,
                     shareContext = "ads",
                     algorithm = "internal",
-                    flip = 0,
+                    flip = 3,
                     debug = true
             ).apply {
                 addListener(object : AdViewEventListener {
