@@ -40,6 +40,7 @@ class TestActivity : Activity() {
 
                 override fun adsLoadStart() = logE("adsLoadStart")
                 override fun adsLoadSuccess() = logE("adsLoadSuccess")
+                override fun adsLoadEmpty() = logE("adsLoadEmpty")
                 override fun adsLoadError() = logE("adsLoadError")
                 override fun adsLoadCancel() = logE("adsLoadCancel")
                 override fun adDisplay(index: Int) = logE("adDisplay $index")

@@ -105,6 +105,7 @@ class AdView : FrameLayout {
 
     private fun onAds(ads: List<RankingItem>) {
         if (ads.isEmpty()) {
+            notifyListeners { adsLoadEmpty() }
             emptyView.visibility = View.VISIBLE
             emptyView.setText(R.string.userfeeds_ads_empty)
             emptyView.setOnLongClickListener {

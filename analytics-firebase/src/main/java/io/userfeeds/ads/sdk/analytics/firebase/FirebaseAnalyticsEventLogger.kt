@@ -12,6 +12,7 @@ class FirebaseAnalyticsEventLogger(context: Context) : AdViewEventListener {
 
     override fun adsLoadStart() = sendEvent("userfeeds_ads_load_start")
     override fun adsLoadSuccess() = sendEvent("userfeeds_ads_load_success")
+    override fun adsLoadEmpty() = sendEvent("userfeeds_ads_load_empty")
     override fun adsLoadError() = sendEvent("userfeeds_ads_load_error")
     override fun adsLoadCancel() = sendEvent("userfeeds_ads_load_cancel")
     override fun adDisplay(index: Int) = sendEvent("userfeeds_ad_display")

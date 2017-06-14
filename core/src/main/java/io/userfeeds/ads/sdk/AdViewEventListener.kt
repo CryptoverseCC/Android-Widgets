@@ -4,6 +4,7 @@ interface AdViewEventListener {
     
     fun adsLoadStart() = Unit
     fun adsLoadSuccess() = Unit
+    fun adsLoadEmpty() = Unit
     fun adsLoadError() = Unit
     fun adsLoadCancel() = Unit
     fun adDisplay(index: Int) = Unit
