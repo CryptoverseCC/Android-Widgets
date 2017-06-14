@@ -123,6 +123,7 @@ class AdView : FrameLayout {
     }
 
     private fun initPager() {
+        viewPager.clearOnPageChangeListeners()
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit

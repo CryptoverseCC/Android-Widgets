@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -34,7 +35,9 @@ class DynamicTestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == 0) {
-            JustViewHolder(TextView(parent.context))
+            JustViewHolder(TextView(parent.context).apply {
+                textSize = 60.0f
+            })
         } else {
             AdsViewHolder(AdView(
                     context = parent.context,
@@ -42,7 +45,25 @@ class DynamicTestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     algorithm = "internal",
                     flip = 0,
                     debug = true
-            ))
+            ).apply {
+                addListener(object : AdViewEventListener {
+                    override fun adClick(index: Int) = logE("adClick $index")
+                    override fun adLongClick(index: Int) = logE("adLongClick $index")
+                    override fun adSwipe(index: Int) = logE("adSwipe $index")
+
+                    override fun adsLoadStart() = logE("adsLoadStart")
+                    override fun adsLoadSuccess() = logE("adsLoadSuccess")
+                    override fun adsLoadEmpty() = logE("adsLoadEmpty")
+                    override fun adsLoadError() = logE("adsLoadError")
+                    override fun adsLoadCancel() = logE("adsLoadCancel")
+                    override fun adDisplay(index: Int) = logE("adDisplay $index")
+                    override fun adTarget(index: Int) = logE("adTarget $index")
+                    override fun widgetDetails() = logE("widgetDetails")
+                    private fun logE(message: String) {
+                        Log.e("DynamicTestActivity", "~~~dynamic: $message")
+                    }
+                })
+            })
         }
     }
 
