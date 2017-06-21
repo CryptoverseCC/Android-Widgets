@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="userfeeds_ads_empty">Long press to see widget details.</string>
-    <string name="userfeeds_ads_load_error">Error loading ads.</string>
+    <string name="userfeeds_links_empty">Empty. Long press to see widget details.</string>
+    <string name="userfeeds_links_load_error">Error loading links.</string>
 </resources>

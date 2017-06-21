@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LinksViewPager">
+        <attr name="context" format="string"/>
+        <attr name="algorithm" format="string"/>
+        <attr name="flip" format="integer"/>
+        <attr name="debug" format="boolean"/>
+    </declare-styleable>
+</resources>

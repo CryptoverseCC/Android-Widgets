@@ -1,6 +1,6 @@
-# android-ads-sdk
+# Android-Widgets
 
-SDK with view to display ads.
+SDK with collection of widgets.
 
 ## Setup
 
@@ -8,7 +8,7 @@ SDK with view to display ads.
 
 ```groovy
 dependencies {
-    compile 'io.userfeeds.ads.sdk:core:<latest version here>'
+    compile 'io.userfeeds.widget:core:<latest version here>'
     compile 'com.android.support:support-v4:<latest version here>'
 }
 ```
@@ -19,12 +19,12 @@ You will need to also depend on support-v4 library, but you don't have to specif
 
 ## Use
 
-### Add `AdView` to layout
+### Add `LinksViewPager` to layout
 
 ```
-<io.userfeeds.ads.sdk.AdView
+<io.userfeeds.widget.LinksViewPager
     xmlns:userfeeds="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/my_ad_view"
+    android:id="@+id/my_links_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     userfeeds:context="ethereum:0x0406735fC1a657398941A50A0602eddf9723A6C8"
@@ -34,7 +34,7 @@ You will need to also depend on support-v4 library, but you don't have to specif
 ### Or create it via code
 
 ```
-val myAdView = AdView(
+val myLinksView = LinksViewPager(
         context = this,
         shareContext = "ethereum:0x0406735fC1a657398941A50A0602eddf9723A6C8",
         algorithm = "ads")
@@ -46,22 +46,22 @@ someFrameLayout.addView(myAdView, layoutParams)
 
 ### What's inside
 
-You may add event listeners to `AdView` to know what's happening.
+You may add event listeners to `LinksViewPager` to know what's happening.
 
 ```
-myAdView.addListener(object : AdViewEventListener {
-    override fun adClick(index: Int) = logE("adClick $index")
-    override fun adLongClick(index: Int) = logE("adLongClick $index")
-    override fun adSwipe(index: Int) = logE("adSwipe $index")
+myAdView.addListener(object : LinksViewPager.EventListener {
+    override fun linkClick(index: Int) = logE("linkClick $index")
+    override fun linkLongClick(index: Int) = logE("linkLongClick $index")
+    override fun linksSwipe(index: Int) = logE("linksSwipe $index")
 
-    override fun adsLoadStart() = logE("adsLoadStart")
-    override fun adsLoadSuccess() = logE("adsLoadSuccess")
-    override fun adsLoadEmpty() = logE("adsLoadEmpty")
-    override fun adsLoadError() = logE("adsLoadError")
-    override fun adsLoadCancel() = logE("adsLoadCancel")
-    override fun adDisplay(index: Int) = logE("adDisplay $index")
-    override fun adTarget(index: Int) = logE("adTarget $index")
-    override fun widgetDetails() = logE("widgetDetails")
+    override fun linksLoadStart() = logE("linksLoadStart")
+    override fun linksLoadSuccess() = logE("linksLoadSuccess")
+    override fun linksLoadEmpty() = logE("linksLoadEmpty")
+    override fun linksLoadError() = logE("linksLoadError")
+    override fun linksLoadCancel() = logE("linksLoadCancel")
+    override fun linkDisplay(index: Int) = logE("linkDisplay $index")
+    override fun linkOpen(index: Int) = logE("linkOpen $index")
+    override fun widgetOpen() = logE("widgetOpen")
     private fun logE(message: String) {
         Log.e(TAG, message)
     }
@@ -70,4 +70,4 @@ myAdView.addListener(object : AdViewEventListener {
 
 ### Settings
 
-`userfeeds:flip="10"` or constructor parameter `flip` can be used to change how often ads are switched. Default value is 6 seconds. Set value lower to equal to 0 if you don't want ads to be switched automatically.
+`userfeeds:flip="10"` or constructor parameter `flip` can be used to change how often ads are switched. Default value is 6 seconds. Set value lower or equal to 0 if you don't want links to be switched automatically.

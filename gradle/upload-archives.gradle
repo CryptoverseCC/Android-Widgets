@@ -1,7 +1,7 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-group = 'io.userfeeds.ads.sdk'
+group = 'io.userfeeds.widget'
 version = '0.0.8'
 
 if (System.env.CI != "true") {

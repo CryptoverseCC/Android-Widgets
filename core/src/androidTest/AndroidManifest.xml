@@ -4,8 +4,8 @@
 
     <application>
 
-        <activity android:name="io.userfeeds.ads.sdk.TestActivity"/>
-        <activity android:name="io.userfeeds.ads.sdk.DynamicTestActivity"/>
+        <activity android:name="io.userfeeds.widget.StaticTestActivity"/>
+        <activity android:name="io.userfeeds.widget.DynamicTestActivity"/>
 
     </application>
 
