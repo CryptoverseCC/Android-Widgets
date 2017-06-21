@@ -44,8 +44,8 @@ class ScoreNormalizerTest {
     }
 
     private fun List<String>.assertNormalizedTo(vararg expected: String) {
-        assertEquals(expected.map(::ad), io.userfeeds.widget.normalize(this.map(::ad)))
+        assertEquals(expected.map(::item), io.userfeeds.widget.normalize(this.map(::item)))
     }
 }
 
-private fun ad(score: String) = RankingItem("", BigDecimal(score), null, null)
+private fun item(score: String) = RankingItem("", BigDecimal(score), null, null)

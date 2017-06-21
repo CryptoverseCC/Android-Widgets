@@ -32,10 +32,10 @@ if (System.env.CI != "true") {
             authentication(userName: userfeedsSonatypeUserName, password: userfeedsSonatypePassword)
         }
         pom.project {
-            name 'Userfeeds Android Ads SDK'
-            description 'Userfeeds Android Ads SDK'
+            name 'Userfeeds Android Widgets SDK'
+            description 'Userfeeds Android Widgets SDK'
             inceptionYear '2017'
-            url 'https://github.com/Userfeeds/android-ads-sdk'
+            url 'https://github.com/Userfeeds/Android-Widgets'
             packaging 'aar'
 
             developers {
@@ -54,9 +54,9 @@ if (System.env.CI != "true") {
                 }
             }
             scm {
-                url 'https://github.com/Userfeeds/android-ads-sdk'
-                connection 'scm:git:git@github.com:Userfeeds/android-ads-sdk.git'
-                developerConnection 'scm:git:git@github.com:Userfeeds/android-ads-sdk.git'
+                url 'https://github.com/Userfeeds/Android-Widgets'
+                connection 'scm:git:git@github.com:Userfeeds/Android-Widgets.git'
+                developerConnection 'scm:git:git@github.com:Userfeeds/Android-Widgets.git'
             }
         }
     }

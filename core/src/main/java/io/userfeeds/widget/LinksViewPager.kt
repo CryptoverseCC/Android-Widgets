@@ -39,17 +39,17 @@ class LinksViewPager : android.widget.FrameLayout {
 
     private val listeners = mutableListOf<EventListener>()
 
-    private lateinit var ads: List<RankingItem>
+    private lateinit var links: List<RankingItem>
     private var loaded = false
     private lateinit var disposable: Disposable
 
-    private val loader by find<View>(R.id.userfeeds_ads_loader)
-    private val viewPager by find<ViewPager>(R.id.userfeeds_ads_pager)
-    private val detailsPanel by find<View>(R.id.userfeeds_ads_details_panel)
-    private val probabilityView by find<TextView>(R.id.userfeeds_ad_probability)
-    private val emptyView by find<TextView>(R.id.userfeeds_ads_empty_view)
+    private val loader by find<View>(R.id.userfeeds_links_loader)
+    private val viewPager by find<ViewPager>(R.id.userfeeds_links_pager)
+    private val detailsPanel by find<View>(R.id.userfeeds_links_details_panel)
+    private val probabilityView by find<TextView>(R.id.userfeeds_link_probability)
+    private val emptyView by find<TextView>(R.id.userfeeds_links_empty_view)
 
-    private val displayRandomAdRunnable = Runnable(this::displayRandomAd)
+    private val displayRandomAdRunnable = Runnable(this::displayRandomLink)
 
     constructor(
             context: android.content.Context,
@@ -87,21 +87,21 @@ class LinksViewPager : android.widget.FrameLayout {
     }
 
     init {
-        android.view.View.inflate(context, R.layout.userfeeds_links_pager_view, this)
+        inflate(context, R.layout.userfeeds_links_pager_view, this)
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         logInfo("onAttachedToWindow")
         if (!loaded) {
-            loadAds()
+            loadLinks()
         } else {
-            displayRandomAd()
+            displayRandomLink()
             startCounter()
         }
     }
 
-    private fun loadAds() {
+    private fun loadLinks() {
         disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
                 .observeOn(mainThread())
                 .doOnSubscribe { notifyListeners { linksLoadStart() } }
@@ -114,17 +114,17 @@ class LinksViewPager : android.widget.FrameLayout {
     }
 
     private fun showLoader() {
-        loader.visibility = android.view.View.VISIBLE
+        loader.show()
     }
 
     private fun hideLoader() {
-        loader.visibility = android.view.View.GONE
+        loader.hide()
     }
 
     private fun onLinks(links: List<RankingItem>) {
         if (links.isEmpty()) {
             notifyListeners { linksLoadEmpty() }
-            emptyView.visibility = android.view.View.VISIBLE
+            emptyView.show()
             emptyView.setText(R.string.userfeeds_links_empty)
             emptyView.setOnLongClickListener {
                 context.openBrowser("http://userfeeds.io/")
@@ -132,11 +132,11 @@ class LinksViewPager : android.widget.FrameLayout {
                 true
             }
         } else {
-            this.ads = links
+            this.links = links
             this.loaded = true
-            detailsPanel.visibility = android.view.View.VISIBLE
+            detailsPanel.show()
             initPager()
-            displayRandomAd()
+            displayRandomLink()
             startCounter()
         }
     }
@@ -148,7 +148,7 @@ class LinksViewPager : android.widget.FrameLayout {
 
             override fun onPageSelected(position: Int) {
                 notifyListeners { linkDisplay(position) }
-                val value = normalize(ads)[position]
+                val value = normalize(links)[position]
                 probabilityView.text = "${value.score.toInt()}%"
             }
 
@@ -163,16 +163,16 @@ class LinksViewPager : android.widget.FrameLayout {
                 }
             }
         })
-        viewPager.adapter = LinksPagerAdapter(ads, object : LinksPagerAdapter.Listener {
+        viewPager.adapter = LinksPagerAdapter(links, object : LinksPagerAdapter.Listener {
 
             override fun onAdClick(item: RankingItem) {
-                notifyListeners { linkClick(ads.indexOf(item)) }
+                notifyListeners { linkClick(links.indexOf(item)) }
                 context.openBrowser(item.target)
-                notifyListeners { linkOpen(ads.indexOf(item)) }
+                notifyListeners { linkOpen(links.indexOf(item)) }
             }
 
             override fun onAdLongClick(item: RankingItem) {
-                notifyListeners { linkLongClick(ads.indexOf(item)) }
+                notifyListeners { linkLongClick(links.indexOf(item)) }
                 context.openBrowser("http://userfeeds.io/")
                 notifyListeners { widgetOpen() }
             }
@@ -181,7 +181,7 @@ class LinksViewPager : android.widget.FrameLayout {
 
     private fun onError(error: Throwable) {
         if (debug) android.util.Log.e("LinksViewPager", "error", error)
-        emptyView.visibility = android.view.View.VISIBLE
+        emptyView.show()
         emptyView.setText(R.string.userfeeds_links_load_error)
     }
 
@@ -205,8 +205,8 @@ class LinksViewPager : android.widget.FrameLayout {
         removeCallbacks(displayRandomAdRunnable)
     }
 
-    private fun displayRandomAd() {
-        val index = ads.randomIndex(random)
+    private fun displayRandomLink() {
+        val index = links.randomIndex(random)
         if (index == viewPager.currentItem) {
             notifyListeners { linkDisplay(index) }
             startCounter()

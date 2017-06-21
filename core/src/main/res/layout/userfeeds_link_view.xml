@@ -12,7 +12,7 @@
 
     <TextView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/userfeeds_ad_title"
+        android:id="@+id/userfeeds_link_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -22,7 +22,7 @@
         tools:text="Some very long title that does not fit screen width, so it must be longer and longer"/>
 
     <TextView
-        android:id="@+id/userfeeds_ad_url"
+        android:id="@+id/userfeeds_link_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/userfeeds_link_text_color"

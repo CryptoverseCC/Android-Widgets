@@ -13,7 +13,7 @@ dependencies {
 }
 ```
 
-You may find the latest version number by going to [maven central search](http://search.maven.org/#search|ga|1|g%3A%22io.userfeeds.ads.sdk%22).
+You may find the latest version number by going to [maven central search](http://search.maven.org/#search|ga|1|g%3A%22io.userfeeds.widget%22).
 
 You will need to also depend on support-v4 library, but you don't have to specify it explicitly if you already depend on another support library that depends on it (e.g. appcompat-v7, desing).
 
@@ -70,4 +70,4 @@ myAdView.addListener(object : LinksViewPager.EventListener {
 
 ### Settings
 
-`userfeeds:flip="10"` or constructor parameter `flip` can be used to change how often ads are switched. Default value is 6 seconds. Set value lower or equal to 0 if you don't want links to be switched automatically.
+`userfeeds:flip="10"` or constructor parameter `flip` can be used to change how often links are switched. Default value is 6 seconds. Set value lower or equal to 0 if you don't want links to be switched automatically.

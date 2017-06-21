@@ -27,9 +27,9 @@ internal class LinksPagerAdapter(private val items: List<RankingItem>, private v
     }
 
     private fun bind(view: View, item: RankingItem) {
-        val titleView = view.findViewById(R.id.userfeeds_ad_title) as TextView
+        val titleView = view.findViewById(R.id.userfeeds_link_title) as TextView
         titleView.text = item.title
-        val urlView = view.findViewById(R.id.userfeeds_ad_url) as TextView
+        val urlView = view.findViewById(R.id.userfeeds_link_url) as TextView
         urlView.text = item.target
         view.setOnClickListener {
             listener.onAdClick(item)
