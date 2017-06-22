@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/userfeeds_link_background"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/userfeeds_link_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/userfeeds_link_text_color"
+        android:textStyle="bold"
+        tools:text="Some very long title that does not fit screen width, so it must be longer and longer"/>
+
+    <TextView
+        android:id="@+id/userfeeds_link_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/userfeeds_link_text_color"
+        tools:text="Some random\nstuff about this link very, very, very, very, very, very, very, very, very long"/>
+
+    <TextView
+        android:id="@+id/userfeeds_link_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="middle"
+        android:lines="1"
+        android:textColor="@color/userfeeds_link_text_color"
+        tools:text="https://boardgamegeek.com/boardgame/174430/gloomhaven"/>
+
+</LinearLayout>

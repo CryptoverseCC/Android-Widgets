@@ -18,7 +18,7 @@ internal class LinksRecyclerAdapter(private val items: List<RankingItem>, privat
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
-        val itemView = inflater.inflate(R.layout.userfeeds_link_view, parent, false)
+        val itemView = inflater.inflate(R.layout.userfeeds_link_view_full, parent, false)
         return Holder(itemView)
     }
 
@@ -26,6 +26,8 @@ internal class LinksRecyclerAdapter(private val items: List<RankingItem>, privat
         val item = items[position]
         val titleView = holder.itemView.findViewById(R.id.userfeeds_link_title) as TextView
         titleView.text = item.title
+        val summaryView = holder.itemView.findViewById(R.id.userfeeds_link_summary) as TextView
+        summaryView.text = item.summary
         val urlView = holder.itemView.findViewById(R.id.userfeeds_link_url) as TextView
         urlView.text = item.target
         holder.itemView.setOnClickListener {
