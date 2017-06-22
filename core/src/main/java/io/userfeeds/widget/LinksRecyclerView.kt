@@ -48,6 +48,7 @@ class LinksRecyclerView : FrameLayout {
     private val emptyView by find<TextView>(R.id.userfeeds_links_empty_view)
 
     private fun notifyListeners(func: EventListener.() -> Unit) {
+        object : EventListener {}.func()
     }
 
     constructor(
@@ -129,6 +130,7 @@ class LinksRecyclerView : FrameLayout {
 
             override fun onLinkClick(item: RankingItem) {
                 notifyListeners { linkClick(links.indexOf(item)) }
+                context.openBrowser(Uri.parse(item.target))
                 notifyListeners { linkOpen(links.indexOf(item)) }
             }
         })
