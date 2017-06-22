@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import io.userfeeds.sdk.core.ranking.RankingItem
 
-internal class LinksPagerAdapter(private val items: List<RankingItem>, private val listener: LinksPagerAdapter.Listener) : PagerAdapter() {
+internal class LinksPagerAdapter(private val items: List<RankingItem>, private val listener: Listener) : PagerAdapter() {
 
     interface Listener {
 

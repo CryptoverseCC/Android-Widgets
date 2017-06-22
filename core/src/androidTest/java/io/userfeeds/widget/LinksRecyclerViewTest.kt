@@ -5,13 +5,13 @@ import android.support.test.rule.ActivityTestRule
 import org.junit.Rule
 import org.junit.Test
 
-class LinksViewPagerDynamicTest {
+class LinksRecyclerViewTest {
 
     @Rule @JvmField
-    val rule = ActivityTestRule<DynamicTestActivity>(DynamicTestActivity::class.java)
+    val rule = ActivityTestRule<RecyclerViewTestActivity>(RecyclerViewTestActivity::class.java)
 
     @Test
     fun start() {
-        SystemClock.sleep(1000)
+        SystemClock.sleep(1000000)
     }
 }
