@@ -25,7 +25,9 @@
         android:id="@+id/userfeeds_link_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="middle"
+        android:lines="1"
         android:textColor="@color/userfeeds_link_text_color"
-        tools:text="https://userfeeds.io"/>
+        tools:text="https://boardgamegeek.com/boardgame/174430/gloomhaven"/>
 
 </LinearLayout>
