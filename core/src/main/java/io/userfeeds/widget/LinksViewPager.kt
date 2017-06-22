@@ -1,8 +1,11 @@
 package io.userfeeds.widget
 
+import android.content.Context
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.SCROLL_STATE_DRAGGING
 import android.support.v4.view.ViewPager.SCROLL_STATE_IDLE
+import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -52,7 +55,7 @@ class LinksViewPager : android.widget.FrameLayout {
     private val displayRandomAdRunnable = Runnable(this::displayRandomLink)
 
     constructor(
-            context: android.content.Context,
+            context: Context,
             shareContext: String,
             algorithm: String,
             flip: Int = defaultFlip,
@@ -63,14 +66,14 @@ class LinksViewPager : android.widget.FrameLayout {
         this.debug = debug
     }
 
-    constructor(context: android.content.Context, attrs: android.util.AttributeSet) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
 
-    constructor(context: android.content.Context, attrs: android.util.AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LinksViewPager, defStyleAttr, 0)
         this.shareContext = a.getString(R.styleable.LinksViewPager_context)
         this.algorithm = a.getString(R.styleable.LinksViewPager_algorithm)
-        this.flip = a.getInt(R.styleable.LinksViewPager_flip, io.userfeeds.widget.LinksViewPager.Companion.defaultFlip)
-        this.debug = a.getBoolean(R.styleable.LinksViewPager_debug, io.userfeeds.widget.LinksViewPager.Companion.defaultDebug)
+        this.flip = a.getInt(R.styleable.LinksViewPager_flip, defaultFlip)
+        this.debug = a.getBoolean(R.styleable.LinksViewPager_debug, defaultDebug)
         a.recycle()
     }
 
@@ -180,7 +183,7 @@ class LinksViewPager : android.widget.FrameLayout {
     }
 
     private fun onError(error: Throwable) {
-        if (debug) android.util.Log.e("LinksViewPager", "error", error)
+        if (debug) Log.e("LinksViewPager", "error", error)
         emptyView.show()
         emptyView.setText(R.string.userfeeds_links_load_error)
     }
@@ -216,7 +219,7 @@ class LinksViewPager : android.widget.FrameLayout {
     }
 
     private fun logInfo(message: String) {
-        if (debug) android.util.Log.i("LinksViewPager", message)
+        if (debug) Log.i("LinksViewPager", message)
     }
 
     companion object {
