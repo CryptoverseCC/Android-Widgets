@@ -1,6 +1,7 @@
 package io.userfeeds.widget
 
 import android.content.Context
+import android.net.Uri
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.SCROLL_STATE_DRAGGING
 import android.support.v4.view.ViewPager.SCROLL_STATE_IDLE
@@ -37,6 +38,7 @@ class LinksViewPager : android.widget.FrameLayout {
 
     private val shareContext: String
     private val algorithm: String
+    private val whitelist: String?
     private val flip: Int
     private val debug: Boolean
 
@@ -58,10 +60,12 @@ class LinksViewPager : android.widget.FrameLayout {
             context: Context,
             shareContext: String,
             algorithm: String,
+            whitelist: String? = null,
             flip: Int = defaultFlip,
             debug: Boolean = defaultDebug) : super(context) {
         this.shareContext = shareContext
         this.algorithm = algorithm
+        this.whitelist = whitelist
         this.flip = flip
         this.debug = debug
     }
@@ -72,6 +76,7 @@ class LinksViewPager : android.widget.FrameLayout {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LinksViewPager, defStyleAttr, 0)
         this.shareContext = a.getString(R.styleable.LinksViewPager_context)
         this.algorithm = a.getString(R.styleable.LinksViewPager_algorithm)
+        this.whitelist = a.getString(R.styleable.LinksViewPager_whitelist)
         this.flip = a.getInt(R.styleable.LinksViewPager_flip, defaultFlip)
         this.debug = a.getBoolean(R.styleable.LinksViewPager_debug, defaultDebug)
         a.recycle()
@@ -130,7 +135,7 @@ class LinksViewPager : android.widget.FrameLayout {
             emptyView.show()
             emptyView.setText(R.string.userfeeds_links_empty)
             emptyView.setOnLongClickListener {
-                context.openBrowser("http://userfeeds.io/")
+                context.openBrowser(widgetDetailsUrl)
                 notifyListeners { widgetOpen() }
                 true
             }
@@ -170,17 +175,24 @@ class LinksViewPager : android.widget.FrameLayout {
 
             override fun onAdClick(item: RankingItem) {
                 notifyListeners { linkClick(links.indexOf(item)) }
-                context.openBrowser(item.target)
+                context.openBrowser(Uri.parse(item.target))
                 notifyListeners { linkOpen(links.indexOf(item)) }
             }
 
             override fun onAdLongClick(item: RankingItem) {
                 notifyListeners { linkLongClick(links.indexOf(item)) }
-                context.openBrowser("http://userfeeds.io/")
+                context.openBrowser(widgetDetailsUrl)
                 notifyListeners { widgetOpen() }
             }
         })
     }
+
+    private val widgetDetailsUrl
+        get() = Uri.parse("https://userfeeds.io/apps/widgets/details/").buildUpon()
+                .appendQueryParameter("context", shareContext)
+                .appendQueryParameter("algorithm", algorithm)
+                .apply { if (whitelist != null) appendQueryParameter("whitelist", whitelist) }
+                .build()
 
     private fun onError(error: Throwable) {
         if (debug) Log.e("LinksViewPager", "error", error)
