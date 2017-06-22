@@ -87,6 +87,7 @@ class LinksRecyclerView : FrameLayout {
     private fun loadLinks() {
         disposable = UserfeedsService.get()
                 .getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""), whitelist)
+                .map(::normalize)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { notifyListeners { linksLoadStart() } }
                 .doOnSuccess { notifyListeners { linksLoadSuccess() } }

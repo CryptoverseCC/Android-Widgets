@@ -26,6 +26,8 @@ internal class LinksRecyclerAdapter(private val items: List<RankingItem>, privat
         val item = items[position]
         val titleView = holder.itemView.findViewById(R.id.userfeeds_link_title) as TextView
         titleView.text = item.title
+        val probabilityView = holder.itemView.findViewById(R.id.userfeeds_link_probability) as TextView
+        probabilityView.text = "${item.score}%"
         val summaryView = holder.itemView.findViewById(R.id.userfeeds_link_summary) as TextView
         summaryView.text = item.summary
         val urlView = holder.itemView.findViewById(R.id.userfeeds_link_url) as TextView

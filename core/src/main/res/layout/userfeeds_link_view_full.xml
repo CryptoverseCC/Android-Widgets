@@ -9,16 +9,32 @@
     android:orientation="vertical"
     android:padding="4dp">
 
-    <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/userfeeds_link_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textColor="@color/userfeeds_link_text_color"
-        android:textStyle="bold"
-        tools:text="Some very long title that does not fit screen width, so it must be longer and longer"/>
+        android:orientation="horizontal">
+
+        <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/userfeeds_link_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/userfeeds_link_text_color"
+            android:textStyle="bold"
+            tools:text="Some very long title that does not fit screen width, so it must be longer and longer"/>
+
+        <TextView
+            android:id="@+id/userfeeds_link_probability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:textColor="@color/userfeeds_link_text_color"
+            tools:text="30%"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/userfeeds_link_summary"
