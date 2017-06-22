@@ -24,6 +24,7 @@ class StaticTestActivity : Activity() {
                     context = this,
                     shareContext = "ads",
                     algorithm = "internal",
+                    whitelist = "somethingSomething",
                     flip = 0,
                     debug = true)
             it.addView(adView1, layoutParams)

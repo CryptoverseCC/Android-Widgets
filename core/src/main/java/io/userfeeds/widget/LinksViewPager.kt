@@ -110,7 +110,8 @@ class LinksViewPager : android.widget.FrameLayout {
     }
 
     private fun loadLinks() {
-        disposable = UserfeedsService.get().getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""))
+        disposable = UserfeedsService.get()
+                .getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""), whitelist)
                 .observeOn(mainThread())
                 .doOnSubscribe { notifyListeners { linksLoadStart() } }
                 .doOnSuccess { notifyListeners { linksLoadSuccess() } }
