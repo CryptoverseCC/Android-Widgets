@@ -22,9 +22,8 @@ class StaticTestActivity : Activity() {
             }
             val adView1 = LinksViewPager(
                     context = this,
-                    shareContext = "ads",
-                    algorithm = "internal",
-                    whitelist = "somethingSomething",
+                    shareContext = "rinkeby:0x0406735fc1a657398941a50a0602eddf9723a6c8",
+                    algorithm = "ads",
                     flip = 0,
                     debug = true)
             it.addView(adView1, layoutParams)
@@ -33,8 +32,9 @@ class StaticTestActivity : Activity() {
             }
             val adView2 = LinksViewPager(
                     context = this,
-                    shareContext = "ads",
-                    algorithm = "internal",
+                    shareContext = "rinkeby:0xcd73518680ab60ec2253841909d3448bc60f0665",
+                    algorithm = "ads",
+                    whitelist = "rinkeby:0xcd73518680ab60ec2253841909d3448bc60f0665",
                     debug = true)
             adView2.addListener(object : LinksViewPager.EventListener {
                 override fun linkClick(index: Int) = logE("linkClick $index")
