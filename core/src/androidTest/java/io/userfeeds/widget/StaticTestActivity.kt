@@ -7,15 +7,11 @@ import android.view.Gravity
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
-import io.userfeeds.sdk.core.UserfeedsSdk
 
 class StaticTestActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        UserfeedsSdk.initialize(
-                apiKey = "59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c",
-                debug = true)
         setContentView(FrameLayout(this).also {
             val layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
                 gravity = Gravity.TOP

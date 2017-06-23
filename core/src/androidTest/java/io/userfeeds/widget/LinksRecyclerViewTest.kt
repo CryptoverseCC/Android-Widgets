@@ -12,6 +12,6 @@ class LinksRecyclerViewTest {
 
     @Test
     fun start() {
-        SystemClock.sleep(1000000)
+        SystemClock.sleep(10000)
     }
 }

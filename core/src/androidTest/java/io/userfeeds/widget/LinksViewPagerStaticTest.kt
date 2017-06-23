@@ -12,6 +12,6 @@ class LinksViewPagerStaticTest {
 
     @Test
     fun start() {
-        SystemClock.sleep(1000)
+        SystemClock.sleep(10000)
     }
 }

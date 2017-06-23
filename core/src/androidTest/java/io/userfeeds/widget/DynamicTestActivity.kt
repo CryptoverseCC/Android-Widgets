@@ -8,15 +8,11 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import io.userfeeds.sdk.core.UserfeedsSdk
 
 class DynamicTestActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        UserfeedsSdk.initialize(
-                apiKey = "59049c8fdfed920001508e2a94bad07aa8f846674ae92e8765bd926c",
-                debug = true)
         val recyclerView = RecyclerView(this).also {
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = DynamicTestAdapter()
