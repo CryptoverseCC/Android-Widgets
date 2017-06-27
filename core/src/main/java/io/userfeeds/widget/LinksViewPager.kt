@@ -176,7 +176,7 @@ class LinksViewPager : android.widget.FrameLayout {
 
             override fun onAdClick(item: RankingItem) {
                 notifyListeners { linkClick(links.indexOf(item)) }
-                context.openBrowser(Uri.parse(item.target))
+                context.openBrowser(item.target)
                 notifyListeners { linkOpen(links.indexOf(item)) }
             }
 
@@ -189,11 +189,10 @@ class LinksViewPager : android.widget.FrameLayout {
     }
 
     private val widgetDetailsUrl
-        get() = Uri.parse("https://userfeeds.io/apps/widgets/details/").buildUpon()
-                .appendQueryParameter("context", shareContext)
-                .appendQueryParameter("algorithm", algorithm)
-                .apply { if (whitelist != null) appendQueryParameter("whitelist", whitelist) }
-                .build()
+        get() = "https://userfeeds.io/apps/widgets/#/details" +
+                "?context=${Uri.encode(shareContext)}" +
+                "&algorithm=${Uri.encode(algorithm)}" +
+                if (whitelist != null) "&whitelist=${Uri.encode(whitelist)}" else ""
 
     private fun onError(error: Throwable) {
         if (debug) Log.e("LinksViewPager", "error", error)
