@@ -20,6 +20,7 @@ class StaticTestActivity : Activity() {
                     context = this,
                     shareContext = "rinkeby:0x0406735fc1a657398941a50a0602eddf9723a6c8",
                     algorithm = "ads",
+                    publisherNote = "All ads visible",
                     flip = 0,
                     debug = true)
             it.addView(adView1, layoutParams)
@@ -31,6 +32,7 @@ class StaticTestActivity : Activity() {
                     shareContext = "rinkeby:0xcd73518680ab60ec2253841909d3448bc60f0665",
                     algorithm = "ads",
                     whitelist = "rinkeby:0xcd73518680ab60ec2253841909d3448bc60f0665",
+                    publisherNote = "Send email to maciej dot gorski at userfeeds dot io to have your link whitelisted",
                     debug = true)
             adView2.addListener(object : LinksViewPager.EventListener {
                 override fun linkClick(index: Int) = logE("linkClick $index")

@@ -4,6 +4,7 @@
         <attr name="context" format="string"/>
         <attr name="algorithm" format="string"/>
         <attr name="whitelist" format="string"/>
+        <attr name="publisherNote" format="string"/>
         <attr name="flip" format="integer"/>
         <attr name="debug" format="boolean"/>
     </declare-styleable>

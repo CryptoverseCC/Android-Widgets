@@ -39,6 +39,7 @@ class LinksViewPager : android.widget.FrameLayout {
     private val shareContext: String
     private val algorithm: String
     private val whitelist: String?
+    private val publisherNote: String?
     private val flip: Int
     private val debug: Boolean
 
@@ -61,11 +62,13 @@ class LinksViewPager : android.widget.FrameLayout {
             shareContext: String,
             algorithm: String,
             whitelist: String? = null,
+            publisherNote: String? = null,
             flip: Int = defaultFlip,
             debug: Boolean = defaultDebug) : super(context) {
         this.shareContext = shareContext
         this.algorithm = algorithm
         this.whitelist = whitelist
+        this.publisherNote = publisherNote
         this.flip = flip
         this.debug = debug
     }
@@ -77,6 +80,7 @@ class LinksViewPager : android.widget.FrameLayout {
         this.shareContext = a.getString(R.styleable.LinksViewPager_context)
         this.algorithm = a.getString(R.styleable.LinksViewPager_algorithm)
         this.whitelist = a.getString(R.styleable.LinksViewPager_whitelist)
+        this.publisherNote = a.getString(R.styleable.LinksViewPager_publisherNote)
         this.flip = a.getInt(R.styleable.LinksViewPager_flip, defaultFlip)
         this.debug = a.getBoolean(R.styleable.LinksViewPager_debug, defaultDebug)
         a.recycle()
@@ -192,7 +196,8 @@ class LinksViewPager : android.widget.FrameLayout {
         get() = "https://userfeeds.io/apps/widgets/#/details" +
                 "?context=${Uri.encode(shareContext)}" +
                 "&algorithm=${Uri.encode(algorithm)}" +
-                if (whitelist != null) "&whitelist=${Uri.encode(whitelist)}" else ""
+                (if (whitelist != null) "&whitelist=${Uri.encode(whitelist)}" else "") +
+                (if (publisherNote != null) "&publisherNote=${Uri.encode(publisherNote)}" else "")
 
     private fun onError(error: Throwable) {
         if (debug) Log.e("LinksViewPager", "error", error)

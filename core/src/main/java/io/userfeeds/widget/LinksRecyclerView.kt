@@ -37,6 +37,7 @@ class LinksRecyclerView : FrameLayout {
     private val shareContext: String
     private val algorithm: String
     private val whitelist: String?
+    private val publisherNote: String?
     private val debug: Boolean
 
     private lateinit var links: List<RankingItem>
@@ -56,10 +57,12 @@ class LinksRecyclerView : FrameLayout {
             shareContext: String,
             algorithm: String,
             whitelist: String? = null,
+            publisherNote: String? = null,
             debug: Boolean = defaultDebug) : super(context) {
         this.shareContext = shareContext
         this.algorithm = algorithm
         this.whitelist = whitelist
+        this.publisherNote = publisherNote
         this.debug = debug
     }
 
@@ -70,6 +73,7 @@ class LinksRecyclerView : FrameLayout {
         this.shareContext = a.getString(R.styleable.LinksRecyclerView_context)
         this.algorithm = a.getString(R.styleable.LinksRecyclerView_algorithm)
         this.whitelist = a.getString(R.styleable.LinksRecyclerView_whitelist)
+        this.publisherNote = a.getString(R.styleable.LinksRecyclerView_publisherNote)
         this.debug = a.getBoolean(R.styleable.LinksRecyclerView_debug, defaultDebug)
         a.recycle()
     }
@@ -140,7 +144,8 @@ class LinksRecyclerView : FrameLayout {
         get() = "https://userfeeds.io/apps/widgets/#/details" +
                 "?context=${Uri.encode(shareContext)}" +
                 "&algorithm=${Uri.encode(algorithm)}" +
-                if (whitelist != null) "&whitelist=${Uri.encode(whitelist)}" else ""
+                (if (whitelist != null) "&whitelist=${Uri.encode(whitelist)}" else "") +
+                (if (publisherNote != null) "&publisherNote=${Uri.encode(publisherNote)}" else "")
 
     private fun onError(error: Throwable) {
         if (debug) Log.e("LinksViewPager", "error", error)

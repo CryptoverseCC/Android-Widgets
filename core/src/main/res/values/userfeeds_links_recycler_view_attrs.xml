@@ -4,6 +4,7 @@
         <attr name="context"/>
         <attr name="algorithm"/>
         <attr name="whitelist"/>
+        <attr name="publisherNote"/>
         <attr name="debug"/>
     </declare-styleable>
 </resources>
