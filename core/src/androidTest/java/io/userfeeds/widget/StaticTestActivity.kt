@@ -7,11 +7,13 @@ import android.view.Gravity
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
+import io.userfeeds.sdk.core.UserfeedsSdk
 
 class StaticTestActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        UserfeedsSdk.initialize("", debug = true)
         setContentView(FrameLayout(this).also {
             val layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
                 gravity = Gravity.TOP
@@ -19,7 +21,7 @@ class StaticTestActivity : Activity() {
             val adView1 = LinksViewPager(
                     context = this,
                     shareContext = "rinkeby:0x0406735fc1a657398941a50a0602eddf9723a6c8",
-                    algorithm = "ads",
+                    algorithm = "links",
                     publisherNote = "All ads visible",
                     flip = 0,
                     debug = true)
@@ -30,7 +32,7 @@ class StaticTestActivity : Activity() {
             val adView2 = LinksViewPager(
                     context = this,
                     shareContext = "rinkeby:0xcd73518680ab60ec2253841909d3448bc60f0665",
-                    algorithm = "ads",
+                    algorithm = "links",
                     whitelist = "rinkeby:0xcd73518680ab60ec2253841909d3448bc60f0665",
                     publisherNote = "Send email to maciej dot gorski at userfeeds dot io to have your link whitelisted",
                     debug = true)

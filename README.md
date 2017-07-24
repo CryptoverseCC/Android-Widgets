@@ -28,7 +28,7 @@ You will need to also depend on support-v4 library, but you don't have to specif
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     userfeeds:context="ethereum:0x0406735fC1a657398941A50A0602eddf9723A6C8"
-    userfeeds:algorithm="ads"/>
+    userfeeds:algorithm="links"/>
 ```
 
 ### Or create it via code
@@ -37,7 +37,7 @@ You will need to also depend on support-v4 library, but you don't have to specif
 val myLinksView = LinksViewPager(
         context = this,
         shareContext = "ethereum:0x0406735fC1a657398941A50A0602eddf9723A6C8",
-        algorithm = "ads")
+        algorithm = "links")
 val layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
     gravity = BOTTOM
 }

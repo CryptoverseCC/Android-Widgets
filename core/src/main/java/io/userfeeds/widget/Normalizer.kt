@@ -7,6 +7,9 @@ import java.math.RoundingMode.HALF_UP
 
 internal fun normalize(links: List<RankingItem>): List<RankingItem> {
     val scoreSum = links.fold(BigDecimal.ZERO) { acc, item -> acc + item.score }
+    if (scoreSum == BigDecimal.ZERO) {
+        return links
+    }
     val probabilities = links.map { (it.score * BigDecimal("100")).divide(scoreSum, 6, HALF_UP) }
     val roundedDownProbabilities = probabilities.map { it.setScale(0, DOWN) }
     val roundedDownProbabilitiesSum = roundedDownProbabilities.fold(BigDecimal.ZERO) { acc, value -> acc + value }

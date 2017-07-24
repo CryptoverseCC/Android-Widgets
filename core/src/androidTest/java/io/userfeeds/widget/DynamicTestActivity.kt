@@ -8,11 +8,13 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import io.userfeeds.sdk.core.UserfeedsSdk
 
 class DynamicTestActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        UserfeedsSdk.initialize("", debug = true)
         val recyclerView = RecyclerView(this).also {
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = DynamicTestAdapter()
@@ -38,7 +40,7 @@ class DynamicTestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             AdsViewHolder(LinksViewPager(
                     context = parent.context,
                     shareContext = "rinkeby:0x0406735fc1a657398941a50a0602eddf9723a6c8",
-                    algorithm = "ads",
+                    algorithm = "links",
                     flip = 3,
                     debug = true
             ).apply {

@@ -13,10 +13,11 @@ class RecyclerViewTestActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        UserfeedsSdk.initialize("", debug = true)
         val linksRecyclerView = LinksRecyclerView(
                 context = this,
                 shareContext = "rinkeby:0x0406735fc1a657398941a50a0602eddf9723a6c8",
-                algorithm = "ads",
+                algorithm = "links",
                 debug = true)
         setContentView(linksRecyclerView)
     }
