@@ -34,7 +34,7 @@ class LinksRecyclerView : FrameLayout {
         fun linksSwipe(index: Int) = Unit
     }
 
-    private val shareContext: RankingContext
+    private val rankingContext: RankingContext
     private val algorithm: String
     private val whitelist: String?
     private val publisherNote: String?
@@ -54,12 +54,12 @@ class LinksRecyclerView : FrameLayout {
 
     constructor(
             context: Context,
-            shareContext: String,
+            rankingContext: String,
             algorithm: String,
             whitelist: String? = null,
             publisherNote: String? = null,
             debug: Boolean = defaultDebug) : super(context) {
-        this.shareContext = shareContext
+        this.rankingContext = rankingContext
         this.algorithm = algorithm
         this.whitelist = whitelist
         this.publisherNote = publisherNote
@@ -70,7 +70,7 @@ class LinksRecyclerView : FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LinksRecyclerView, defStyleAttr, 0)
-        this.shareContext = a.getString(R.styleable.LinksRecyclerView_context)
+        this.rankingContext = a.getString(R.styleable.LinksRecyclerView_rankingContext)
         this.algorithm = a.getString(R.styleable.LinksRecyclerView_algorithm)
         this.whitelist = a.getString(R.styleable.LinksRecyclerView_whitelist)
         this.publisherNote = a.getString(R.styleable.LinksRecyclerView_publisherNote)
@@ -91,7 +91,7 @@ class LinksRecyclerView : FrameLayout {
 
     private fun loadLinks() {
         disposable = UserfeedsService.get()
-                .getRanking(shareContext, Algorithm(algorithm, ""), whitelist)
+                .getRanking(rankingContext, Algorithm(algorithm, ""), whitelist)
                 .map(::normalize)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { notifyListeners { linksLoadStart() } }
@@ -142,7 +142,7 @@ class LinksRecyclerView : FrameLayout {
 
     private val widgetDetailsUrl
         get() = "https://userfeeds.io/apps/widgets/#/details" +
-                "?context=${Uri.encode(shareContext)}" +
+                "?context=${Uri.encode(rankingContext)}" +
                 "&algorithm=${Uri.encode(algorithm)}" +
                 (if (whitelist != null) "&whitelist=${Uri.encode(whitelist)}" else "") +
                 (if (publisherNote != null) "&publisherNote=${Uri.encode(publisherNote)}" else "")

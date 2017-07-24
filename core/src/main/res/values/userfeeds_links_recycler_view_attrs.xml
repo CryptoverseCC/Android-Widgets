@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="LinksRecyclerView">
-        <attr name="context"/>
+        <attr name="rankingContext"/>
         <attr name="algorithm"/>
         <attr name="whitelist"/>
         <attr name="publisherNote"/>

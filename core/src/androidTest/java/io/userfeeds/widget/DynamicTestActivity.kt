@@ -39,7 +39,7 @@ class DynamicTestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         } else {
             AdsViewHolder(LinksViewPager(
                     context = parent.context,
-                    shareContext = "rinkeby:0x0406735fc1a657398941a50a0602eddf9723a6c8",
+                    rankingContext = "rinkeby:0x0406735fc1a657398941a50a0602eddf9723a6c8",
                     algorithm = "links",
                     flip = 3,
                     debug = true

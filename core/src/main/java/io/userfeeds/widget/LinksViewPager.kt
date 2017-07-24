@@ -36,7 +36,7 @@ class LinksViewPager : android.widget.FrameLayout {
         fun linksSwipe(index: Int) = Unit
     }
 
-    private val shareContext: RankingContext
+    private val rankingContext: RankingContext
     private val algorithm: String
     private val whitelist: String?
     private val publisherNote: String?
@@ -59,13 +59,13 @@ class LinksViewPager : android.widget.FrameLayout {
 
     constructor(
             context: Context,
-            shareContext: String,
+            rankingContext: RankingContext,
             algorithm: String,
             whitelist: String? = null,
             publisherNote: String? = null,
             flip: Int = defaultFlip,
             debug: Boolean = defaultDebug) : super(context) {
-        this.shareContext = shareContext
+        this.rankingContext = rankingContext
         this.algorithm = algorithm
         this.whitelist = whitelist
         this.publisherNote = publisherNote
@@ -77,7 +77,7 @@ class LinksViewPager : android.widget.FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LinksViewPager, defStyleAttr, 0)
-        this.shareContext = a.getString(R.styleable.LinksViewPager_context)
+        this.rankingContext = a.getString(R.styleable.LinksViewPager_rankingContext)
         this.algorithm = a.getString(R.styleable.LinksViewPager_algorithm)
         this.whitelist = a.getString(R.styleable.LinksViewPager_whitelist)
         this.publisherNote = a.getString(R.styleable.LinksViewPager_publisherNote)
@@ -115,7 +115,7 @@ class LinksViewPager : android.widget.FrameLayout {
 
     private fun loadLinks() {
         disposable = UserfeedsService.get()
-                .getRanking(shareContext, Algorithm(algorithm, ""), whitelist)
+                .getRanking(rankingContext, Algorithm(algorithm, ""), whitelist)
                 .observeOn(mainThread())
                 .doOnSubscribe { notifyListeners { linksLoadStart() } }
                 .doOnSuccess { notifyListeners { linksLoadSuccess() } }
@@ -194,7 +194,7 @@ class LinksViewPager : android.widget.FrameLayout {
 
     private val widgetDetailsUrl
         get() = "https://userfeeds.io/apps/widgets/#/details" +
-                "?context=${Uri.encode(shareContext)}" +
+                "?context=${Uri.encode(rankingContext)}" +
                 "&algorithm=${Uri.encode(algorithm)}" +
                 (if (whitelist != null) "&whitelist=${Uri.encode(whitelist)}" else "") +
                 (if (publisherNote != null) "&publisherNote=${Uri.encode(publisherNote)}" else "")

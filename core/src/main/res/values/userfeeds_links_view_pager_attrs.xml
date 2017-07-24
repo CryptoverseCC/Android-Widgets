@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="LinksViewPager">
-        <attr name="context" format="string"/>
+        <attr name="rankingContext" format="string"/>
         <attr name="algorithm" format="string"/>
         <attr name="whitelist" format="string"/>
         <attr name="publisherNote" format="string"/>
