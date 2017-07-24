@@ -11,9 +11,9 @@ import android.view.View
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.Disposable
+import io.userfeeds.sdk.core.RankingContext
 import io.userfeeds.sdk.core.UserfeedsService
 import io.userfeeds.sdk.core.algorithm.Algorithm
-import io.userfeeds.sdk.core.context.ShareContext
 import io.userfeeds.sdk.core.ranking.RankingItem
 import java.security.SecureRandom
 import kotlin.LazyThreadSafetyMode.NONE
@@ -36,7 +36,7 @@ class LinksViewPager : android.widget.FrameLayout {
         fun linksSwipe(index: Int) = Unit
     }
 
-    private val shareContext: String
+    private val shareContext: RankingContext
     private val algorithm: String
     private val whitelist: String?
     private val publisherNote: String?
@@ -115,7 +115,7 @@ class LinksViewPager : android.widget.FrameLayout {
 
     private fun loadLinks() {
         disposable = UserfeedsService.get()
-                .getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""), whitelist)
+                .getRanking(shareContext, Algorithm(algorithm, ""), whitelist)
                 .observeOn(mainThread())
                 .doOnSubscribe { notifyListeners { linksLoadStart() } }
                 .doOnSuccess { notifyListeners { linksLoadSuccess() } }

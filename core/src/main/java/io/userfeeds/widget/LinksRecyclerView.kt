@@ -11,9 +11,9 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.userfeeds.sdk.core.RankingContext
 import io.userfeeds.sdk.core.UserfeedsService
 import io.userfeeds.sdk.core.algorithm.Algorithm
-import io.userfeeds.sdk.core.context.ShareContext
 import io.userfeeds.sdk.core.ranking.RankingItem
 
 class LinksRecyclerView : FrameLayout {
@@ -34,7 +34,7 @@ class LinksRecyclerView : FrameLayout {
         fun linksSwipe(index: Int) = Unit
     }
 
-    private val shareContext: String
+    private val shareContext: RankingContext
     private val algorithm: String
     private val whitelist: String?
     private val publisherNote: String?
@@ -91,7 +91,7 @@ class LinksRecyclerView : FrameLayout {
 
     private fun loadLinks() {
         disposable = UserfeedsService.get()
-                .getRanking(ShareContext(shareContext, "", ""), Algorithm(algorithm, ""), whitelist)
+                .getRanking(shareContext, Algorithm(algorithm, ""), whitelist)
                 .map(::normalize)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { notifyListeners { linksLoadStart() } }
