@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="LinksViewPager">
-        <attr name="rankingContext" format="string"/>
-        <attr name="algorithm" format="string"/>
+        <attr name="recipientAddress" format="string"/>
+        <attr name="asset" format="string"/>
         <attr name="whitelist" format="string"/>
-        <attr name="publisherNote" format="string"/>
+        <attr name="algorithm" format="string"/>
+        <attr name="title" format="string"/>
+        <attr name="description" format="string"/>
+        <attr name="contactMethod" format="string"/>
+        <attr name="impressions" format="string"/>
+        <attr name="slots" format="integer"/>
         <attr name="flip" format="integer"/>
+        <attr name="apiUrl" format="string"/>
         <attr name="debug" format="boolean"/>
     </declare-styleable>
 </resources>

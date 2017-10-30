@@ -11,9 +11,7 @@ import android.view.View
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.Disposable
-import io.userfeeds.sdk.core.RankingContext
 import io.userfeeds.sdk.core.UserfeedsService
-import io.userfeeds.sdk.core.algorithm.Algorithm
 import io.userfeeds.sdk.core.ranking.RankingItem
 import java.security.SecureRandom
 import kotlin.LazyThreadSafetyMode.NONE
@@ -36,11 +34,17 @@ class LinksViewPager : android.widget.FrameLayout {
         fun linksSwipe(index: Int) = Unit
     }
 
-    private val rankingContext: RankingContext
-    private val algorithm: String
+    private val recipientAddress: String
+    private val asset: String
     private val whitelist: String?
-    private val publisherNote: String?
+    private val algorithm: String
+    private val title: String?
+    private val description: String?
+    private val contactMethod: String?
+    private val impressions: String?
+    private val slots: Int
     private val flip: Int
+    private val apiUrl: String
     private val debug: Boolean
 
     private val listeners = mutableListOf<EventListener>()
@@ -55,21 +59,33 @@ class LinksViewPager : android.widget.FrameLayout {
     private val probabilityView by find<TextView>(R.id.userfeeds_link_probability)
     private val emptyView by find<TextView>(R.id.userfeeds_links_empty_view)
 
-    private val displayRandomAdRunnable = Runnable(this::displayRandomLink)
+    private val displayRandomLinkRunnable = Runnable(this::displayRandomLink)
 
     constructor(
             context: Context,
-            rankingContext: RankingContext,
-            algorithm: String,
+            asset: String,
+            recipientAddress: String,
+            algorithm: String = "links",
             whitelist: String? = null,
-            publisherNote: String? = null,
-            flip: Int = defaultFlip,
-            debug: Boolean = defaultDebug) : super(context) {
-        this.rankingContext = rankingContext
+            title: String? = null,
+            description: String? = null,
+            contactMethod: String? = null,
+            impressions: String? = null,
+            slots: Int = 10,
+            flip: Int = 6,
+            apiUrl: String = "https://api.userfeeds.io",
+            debug: Boolean = false) : super(context) {
+        this.asset = asset.toLowerCase()
+        this.recipientAddress = recipientAddress.toLowerCase()
+        this.whitelist = whitelist?.toLowerCase()
         this.algorithm = algorithm
-        this.whitelist = whitelist
-        this.publisherNote = publisherNote
+        this.title = title
+        this.description = description
+        this.contactMethod = contactMethod
+        this.impressions = impressions
+        this.slots = slots
         this.flip = flip
+        this.apiUrl = apiUrl
         this.debug = debug
     }
 
@@ -77,12 +93,18 @@ class LinksViewPager : android.widget.FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LinksViewPager, defStyleAttr, 0)
-        this.rankingContext = a.getString(R.styleable.LinksViewPager_rankingContext)
-        this.algorithm = a.getString(R.styleable.LinksViewPager_algorithm)
+        this.asset = a.getString(R.styleable.LinksViewPager_asset) ?: throw Exception("asset not set")
+        this.recipientAddress = a.getString(R.styleable.LinksViewPager_recipientAddress) ?: throw Exception("recipientAddress not set")
+        this.algorithm = a.getString(R.styleable.LinksViewPager_algorithm) ?: "links"
         this.whitelist = a.getString(R.styleable.LinksViewPager_whitelist)
-        this.publisherNote = a.getString(R.styleable.LinksViewPager_publisherNote)
-        this.flip = a.getInt(R.styleable.LinksViewPager_flip, defaultFlip)
-        this.debug = a.getBoolean(R.styleable.LinksViewPager_debug, defaultDebug)
+        this.title = a.getString(R.styleable.LinksViewPager_title)
+        this.description = a.getString(R.styleable.LinksViewPager_title)
+        this.contactMethod = a.getString(R.styleable.LinksViewPager_title)
+        this.impressions = a.getString(R.styleable.LinksViewPager_title)
+        this.slots = a.getInt(R.styleable.LinksViewPager_slots, 10)
+        this.flip = a.getInt(R.styleable.LinksViewPager_flip, 6)
+        this.apiUrl = a.getString(R.styleable.LinksViewPager_apiUrl) ?: "https://api.userfeeds.io"
+        this.debug = a.getBoolean(R.styleable.LinksViewPager_debug, false)
         a.recycle()
     }
 
@@ -115,7 +137,7 @@ class LinksViewPager : android.widget.FrameLayout {
 
     private fun loadLinks() {
         disposable = UserfeedsService.get()
-                .getRanking(rankingContext, Algorithm(algorithm, ""), whitelist)
+                .getRanking(asset, recipientAddress, algorithm, whitelist)
                 .observeOn(mainThread())
                 .doOnSubscribe { notifyListeners { linksLoadStart() } }
                 .doOnSuccess { notifyListeners { linksLoadSuccess() } }
@@ -193,11 +215,12 @@ class LinksViewPager : android.widget.FrameLayout {
     }
 
     private val widgetDetailsUrl
-        get() = "https://userfeeds.io/apps/widgets/#/details" +
-                "?context=${Uri.encode(rankingContext)}" +
-                "&algorithm=${Uri.encode(algorithm)}" +
+        get() = "https://linkexchange.io/apps/widgets/#/details" +
+                "?recipientAddress=${Uri.encode(recipientAddress)}" +
+                "&asset=${Uri.encode(asset)}" +
                 (if (whitelist != null) "&whitelist=${Uri.encode(whitelist)}" else "") +
-                (if (publisherNote != null) "&publisherNote=${Uri.encode(publisherNote)}" else "")
+                "&algorithm=${Uri.encode(algorithm)}" +
+                "&size=android%20banner"
 
     private fun onError(error: Throwable) {
         if (debug) Log.e("LinksViewPager", "error", error)
@@ -215,14 +238,14 @@ class LinksViewPager : android.widget.FrameLayout {
     private fun startCounter() {
         if (flip > 0) {
             logInfo("startCounter")
-            removeCallbacks(displayRandomAdRunnable)
-            postDelayed(displayRandomAdRunnable, flip * 1000L)
+            removeCallbacks(displayRandomLinkRunnable)
+            postDelayed(displayRandomLinkRunnable, flip * 1000L)
         }
     }
 
     private fun stopCounter() {
         logInfo("stopCounter")
-        removeCallbacks(displayRandomAdRunnable)
+        removeCallbacks(displayRandomLinkRunnable)
     }
 
     private fun displayRandomLink() {
@@ -241,8 +264,6 @@ class LinksViewPager : android.widget.FrameLayout {
 
     companion object {
 
-        private const val defaultFlip = 6
-        private const val defaultDebug = false
         private val random by lazy(NONE) { SecureRandom() }
     }
 }
