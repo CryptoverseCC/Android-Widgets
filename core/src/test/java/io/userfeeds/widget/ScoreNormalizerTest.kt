@@ -48,4 +48,4 @@ class ScoreNormalizerTest {
     }
 }
 
-private fun item(score: String) = RankingItem("", BigDecimal(score), null, null)
+private fun item(score: String) = RankingItem("", BigDecimal(score), null, "", null, null)
